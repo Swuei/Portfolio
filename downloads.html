@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-DN9PTRHS4G');
+    </script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Swuei | Downloads</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+        <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="top-bar">
+        <nav class="top-bar-nav">
+            <button class="top-bar-btn" onclick="window.location.href='index.html#about'">
+                <i class="fas fa-user"></i>
+                <span>About Me</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
+                <i class="fas fa-cube"></i>
+                <span>Models</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://discord.com/users/817968354979610624', '_blank')">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
+                <i class="fas fa-user-circle"></i>
+                <span>Sketchfab</span>
+            </button>
+            <button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </button>
+        </nav>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Download Center</h2>
+                <p>Get all my free models in 1 place so that you don't have to message me in dms! (More resources will be added soon)</p>
+                <div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
+                    <p>
+                        <strong>Please note:</strong> This is a <strong>prototype</strong> download landing page, some things could be broken. A fix will be rolled out soon for each broken element.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCz9MLnvwdLgHLI947uZGzDZFQipJKB8Gg",
+            authDomain: "swuei-portfolio.firebaseapp.com",
+            projectId: "swuei-portfolio",
+            storageBucket: "swuei-portfolio.appspot.com",
+            messagingSenderId: "498855900959",
+            appId: "1:498855900959:web:1b6a010095b0914776a22a",
+            measurementId: "G-3MZFQS8GQ0"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+    <section id="model-packs" class="download-section" data-aos="fade-up">
+        <div class="download-header">
+            <h3 class="download-title">Swuei's 3D Models</h3>
+        </div>
+        <p class="download-description">
+            Complete packs of my 3D models ready for use in your Minecraft server or resource pack.
+        </p>
+
+        <div class="download-columns">
+            <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+            <div class="download-column">
+                <div class="download-item">
+                    <div class="download-item-header">
+                        <h4>Warden Plushie [1] (16x)</h4>
+                        <span class="download-item-count" data-counter="warden-plushie-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <a href="https://www.mediafire.com/file/dy76vpmoti9n1z7/Warden_Plushie.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'warden-plushie-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/free-minecraft-warden-plushie-16x-b1fe9168a461423d969872b57314414a"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> 5.175KB</span>
+                        <span><i class="fas fa-cube"></i> 1 Model & 1 Texture</span>
+                        <span><i class="fas fa-calendar-alt"></i> 05/19/2025</span>
+                    </div>
+                </div>
+                <div class="download-item">
+                    <div class="download-item-header">
+                        <h4>Crate Variety Pack [4] (32x)</h4>
+                        <span class="download-item-count" data-counter="crate-variety-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <a href="https://www.mediafire.com/file/frwv10f1x7lvxy9/Crates_Pack.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'crate-variety-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> 16.65KB</span>
+                        <span><i class="fas fa-cube"></i> 4 Models & 4 Textures</span>
+                        <span><i class="fas fa-calendar-alt"></i> 05/19/2025</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self Note: This is the start of the right collum -->
+            <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+            <div class="download-item">
+                <div class="download-item-header">
+                    <h4>Crystals Pack [5] (32x)</h4>
+                    <span class="download-item-count" data-counter="crystals-pack-counter">
+                        <i class="fas fa-download"></i> <span>0</span>
+                    </span>
+                </div>
+                <div class="download-links">
+                    <a href="https://www.mediafire.com/file/irz7pqfrk5dxphc/Crystals_Pack.zip/file"
+                       class="download-btn"
+                       target="_blank"
+                       data-download="true"
+                       onclick="trackDownload(event, 'crystals-pack-counter')">
+                        <i class="fas fa-file-archive"></i> Download ZIP
+                    </a>
+                    <a href="https://sketchfab.com/3d-models/free-crystals-32x-a6e17990eae44a37b83d026aeba5dfd2"
+                       class="download-btn"
+                       target="_blank">
+                        <i class="fas fa-eye"></i> Preview
+                    </a>
+                </div>
+                <div class="download-meta">
+                    <span><i class="fas fa-file-archive"></i> 12.63KB</span>
+                    <span><i class="fas fa-cube"></i> 5 Models & 5 Textures</span>
+                    <span><i class="fas fa-calendar-alt"></i> 05/19/2025</span>
+                </div>
+            </div>
+            <div class="download-item">
+                <div class="download-item-header">
+                    <h4>Coming Soon!</h4>
+                    <span class="download-item-count" data-counter="coming-soon-counter">
+                        <i class="fas fa-download"></i> <span>0</span>
+                    </span>
+                </div>
+                <div class="download-links">
+                    <button class="download-btn" disabled>
+                        <i class="fas fa-file-archive"></i> Download ZIP
+                    </button>
+                    <button class="download-btn" disabled>
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                </div>
+                <div class="download-meta">
+                    <span><i class="fas fa-file-archive"></i> -- MB</span>
+                    <span><i class="fas fa-cube"></i> -- models</span>
+                    <span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://discord.com/users/817968354979610624" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://sketchfab.com/Swuei" target="_blank" aria-label="Sketchfab"><i class="fas fa-cube"></i></a>
+            <a href="https://github.com/Swuei" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2025 Swuei. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        async function handleDownload(fileId, fileUrl) {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+            btn.disabled = true;
+
+            try {
+                await trackDownload(fileId);
+
+                window.open(fileUrl, '_blank');
+            } catch (error) {
+                console.error("Download failed:", error);
+                window.open(fileUrl, '_blank');
+            } finally {
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1000);
+            }
+        }
+
+        const notification = document.createElement('div');
+        notification.className = 'download-notification';
+        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
+        document.body.appendChild(notification);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const counters = document.querySelectorAll('[data-counter]');
+            counters.forEach(counter => {
+                const fileId = counter.getAttribute('data-counter');
+                updateCounter(fileId);
+            });
+
+            document.querySelectorAll('.download-btn[data-download="true"]').forEach(btn => {
+                btn.removeAttribute('onclick');
+
+                btn.addEventListener('click', function (e) {
+                    const downloadItem = this.closest('.download-item');
+                    if (!downloadItem) return;
+
+                    const counterElement = downloadItem.querySelector('[data-counter]');
+                    if (!counterElement) return;
+
+                    const fileId = counterElement.getAttribute('data-counter');
+                    const downloadUrl = this.getAttribute('href');
+
+                    if (!fileId || !downloadUrl) return;
+
+                    if (this.classList.contains('disabled')) {
+                        e.preventDefault();
+                        showNotification();
+                        return;
+                    }
+
+                    trackDownload(e, fileId, this, downloadUrl);
+                });
+            });
+        });
+
+        function showNotification() {
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        async function updateCounter(fileId) {
+            try {
+                const snapshot = await db.collection("downloads").where("fileId", "==", fileId).get();
+                const counterElement = document.querySelector(`[data-counter="${fileId}"] span`);
+                if (counterElement) {
+                    counterElement.textContent = snapshot.size;
+                }
+            } catch (error) {
+                console.error(`Error updating counter for ${fileId}:`, error);
+            }
+        }
+
+        async function trackDownload(event, fileId, button, downloadUrl) {
+            event.preventDefault();
+
+            const originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            button.classList.add('loading');
+
+            try {
+                const downloadKey = `downloaded_${fileId}`;
+                if (localStorage.getItem(downloadKey)) {
+                    showNotification();
+                    button.innerHTML = originalHtml;
+                    button.classList.remove('loading');
+                    return;
+                }
+
+                await db.collection("downloads").add({
+                    fileId: fileId,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    userAgent: navigator.userAgent,
+                    source: 'mediafire'
+                });
+
+                localStorage.setItem(downloadKey, 'true');
+
+                await updateCounter(fileId);
+
+                setTimeout(() => {
+                    window.open(downloadUrl, '_blank');
+                }, 300);
+
+                button.innerHTML = '<i class="fas fa-check"></i> Downloaded';
+                button.classList.remove('loading');
+                button.classList.add('disabled');
+
+            } catch (error) {
+                console.error("Download tracking failed:", error);
+
+                if (downloadUrl) {
+                    window.open(downloadUrl, '_blank');
+                }
+
+                button.innerHTML = originalHtml;
+                button.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>

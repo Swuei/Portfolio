@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-DN9PTRHS4G');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swuei | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="top-bar">
+        <nav class="top-bar-nav">
+            <button class="top-bar-btn" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })">
+                <i class="fas fa-user"></i>
+                <span>About Me</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
+                <i class="fas fa-cube"></i>
+                <span>Models</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://discord.com/users/817968354979610624', '_blank')">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
+                <i class="fas fa-user-circle"></i>
+                <span>Sketchfab</span>
+            </button>
+            <button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </button>
+        </nav>
+    </div>
+
+    <header></header>
+
+    <section id="hero" class="hero" data-aos="fade-up">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-logo-container">
+                    <div class="hero-logo-glow"></div>
+                    <img src="https://i.ibb.co/MDhCjGRL/eye-block.png" alt="Swuei Logo" class="hero-logo pulse-animation">
+                </div>
+                <div class="hero-text">
+                    <h2 class="animate__animated animate__fadeIn">Hi I'm Swuei!</h2>
+                    <p>Creating professional Minecraft 3D models - completely free for the community.</p>
+
+                    <div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
+                        <p>
+                            <strong>Please note:</strong> I only create <strong>1 model per person</strong>.
+                            I typically don't make mob models unless it's something I particularly want to create.
+                            My texture styles range from <strong>16x to 32x</strong> resolution.
+                            I also hold the right to <strong>deny your request or cancel the creation of it at any time</strong>.
+                        </p>
+                    </div>
+
+                    <div class="hero-buttons">
+                        <a href="#portfolio" class="btn animate__animated animate__pulse animate__infinite animate__slower">
+                            <i class="fas fa-cube"></i>
+                            View My Models
+                        </a>
+                        <button class="btn btn-secondary" disabled>
+                            <i class="fas fa-user-shield"></i>
+                            Staffing Resume (Temporarily Disabled)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-down" onclick="window.scrollTo({top: document.getElementById('about').offsetTop, behavior: 'smooth'});">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about" data-aos="fade-up">
+        <h2 class="section-title">About Me</h2>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; font-family: 'dogica', sans-serif; line-height: 1.8;">
+            <p class="text-center" data-aos="fade-up" data-aos-delay="200" style="margin-bottom: 30px;">
+                3D Modeling is a hobby that I got into and I have been doing it for a while now (not too long), I enjoy doing it since it's calming and I'm able to help server owners by giving them free models that they do not need to pay for so that they can instead use those funds on more important features for their server.
+            </p>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;" data-aos="fade-up" data-aos-delay="500">
+            <a href="https://discord.com/users/817968354979610624" target="_blank">
+                <img src="https://img.shields.io/badge/Discord-Swuei-%5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord">
+            </a>
+        </div>
+    </section>
+
+    <section id="skills" data-aos="fade-left">
+        <h2 class="section-title">Skills</h2>
+        <div class="grid">
+            <div class="card">
+                <i class="fas fa-cube" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>3D Modeling</h3>
+                <p style="color: #bbb; margin-top: 10px;">Blockbench low poly minecraft like 3d modeling</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-gamepad" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>Animation</h3>
+                <p style="color: #bbb; margin-top: 10px;">Custom animations for your 3d models</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-paint-brush" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>Pixel Art</h3>
+                <p style="color: #bbb; margin-top: 10px;">Texturing for your 3d models</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" data-aos="fade-up">
+        <h2 class="section-title">Services</h2>
+        <div class="grid">
+            <div class="card">
+                <i class="fas fa-cubes" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>3D Modeling</h3>
+                <p style="color: #bbb; margin-top: 10px;">Custom Minecraft models for your server</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-hammer" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>Simple Resource Pack Setup</h3>
+                <p style="color: #bbb; margin-top: 10px;">A base resource pack setup if requested with the model made for you and only with the model made for you, including sounds, models, textures, and so on.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; margin-bottom: 10px; color: #00ffd5;"></i>
+                <h3>Direct Message Support</h3>
+                <p style="color: #bbb; margin-top: 10px;">If you need minor fixes to your models then you can contact me on discord @Swuei.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="portfolio-section">
+        <h2 data-aos="fade-up">Featured 3D Models</h2>
+        <p class="subtitle" data-aos="fade-up" data-aos-delay="100">
+            All models are free and non-exclusive and <strong>all rights to the models are reserved to me the creator</strong>. You may <strong>not sell, redistribute, or claim ownership.</strong> If you wish to sell any models, please contact me first with details about where and why you want to sell them, and credit me on the resource page. I may or may not give you permission to sell and redistribute depending on that.
+        </p>
+
+        <div class="portfolio-grid">
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="200">
+                <iframe title="Miner NPC (16x)" src="https://sketchfab.com/models/6ac60d844ed648f3a0c51c36c99d3414/embed?ui_infos=0&ui_controls=0&ui_watermark=0&autospin=1&autostart=1" loading="lazy"></iframe>
+                <h3>Miner NPC (16x)</h3>
+                <p>Perfect for village or mining-themed settings.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#NPC</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#16x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/6ac60d844ed648f3a0c51c36c99d3414/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="300">
+                <iframe title="Dungeon Door (32x)" src="https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac/embed?ui_infos=0&ui_controls=0&ui_watermark=0&autospin=1&autostart=1" loading="lazy"></iframe>
+                <h3>Dungeon Door (32x)</h3>
+                <p>A high-resolution dungeon door with fantasy elements.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Structure</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#32x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="400">
+                <iframe title="Dumpling Stand (16x Resolution)" src="https://sketchfab.com/models/c045c38aec624ec0a74d4ba4a1f4b6e3/embed?ui_infos=0&ui_controls=0&ui_watermark=0&autospin=1&autostart=1&preload=1" loading="lazy"></iframe>
+                <h3>Dumpling Stand (16x)</h3>
+                <p>Add lively culture to your builds with this charming food stand.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Food</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#16x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/c045c38aec624ec0a74d4ba4a1f4b6e3/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="500">
+                <iframe title="Windmill" src="https://sketchfab.com/models/e408b66d78b34660ab48f5a3e8bfda66/embed?ui_infos=0&ui_controls=0&ui_watermark=0&autospin=1&autostart=1&preload=1" loading="lazy"></iframe>
+                <h3>Windmill (16x)</h3>
+                <p>Rustic and detailed – a perfect centerpiece for any medieval or countryside world.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Building</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#16x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/e408b66d78b34660ab48f5a3e8bfda66/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="600">
+                <iframe title="FREE Crate Variety Pack (32x)" src="https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691/embed?autospin=1&autostart=1&preload=1&ui_infos=0&ui_controls=0&ui_watermark=0" frameborder="0" allowfullscreen loading="lazy">
+                </iframe>
+                <h3>FREE Crate Variety Pack (32x)</h3>
+                <p>Rustic and detailed – a perfect centerpiece for any medieval or countryside world.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Decoration</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#32x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+
+            <div class="portfolio-item" data-aos="zoom-in" data-aos-delay="700">
+                <iframe title="Market Stall (32x)" src="https://sketchfab.com/models/720216662a1043588e1eca7004539f6f/embed?autospin=1&autostart=1&preload=1&ui_infos=0&ui_controls=0&ui_watermark=0" loading="lazy" frameborder="0" allowfullscreen>
+                </iframe>
+                <h3>Market Stall (32x)</h3>
+                <p>A compact, detailed stand for medieval or village markets.</p>
+                <div style="margin-top: 15px;">
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Minecraft</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px;">#Market</span>
+                    <span style="background: #333; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem;">#32x</span>
+                </div>
+                <button class="preview-btn" data-src="https://sketchfab.com/models/720216662a1043588e1eca7004539f6f/embed?ui_infos=0&ui_controls=1&ui_watermark=0">
+                    <i class="fas fa-expand"></i> Preview
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <section id="contact" class="contact-card" data-aos="fade-up">
+        <h3>Get In Touch</h3>
+        <p>Have a project in mind or want to collaborate? Here's how you can reach me:</p>
+
+        <div class="contact-methods">
+            <div class="contact-method" data-aos="fade-up" data-aos-delay="100">
+                <i class="fab fa-discord"></i>
+                <h4>Discord</h4>
+                <p>Direct message me on Discord</p>
+                <a href="https://discord.com/users/817968354979610624" target="_blank">@Swuei</a>
+            </div>
+
+            <div class="contact-method" data-aos="fade-up" data-aos-delay="300">
+                <i class="fa fa-tint"></i>
+                <h4>Sketchfab</h4>
+                <p>Check out my other 3D models</p>
+                <a href="https://sketchfab.com/Swuei" target="_blank">My Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://discord.com/users/817968354979610624" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://sketchfab.com/Swuei" target="_blank" aria-label="Sketchfab"><i class="fas fa-cube"></i></a>
+            <a href="https://github.com/Swuei" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2025 Swuei. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+
+        document.querySelectorAll('.preview-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const item = btn.closest('.portfolio-item');
+                const title = item.querySelector('h3').textContent;
+                const src = btn.dataset.src;
+
+                modalTitle.textContent = title;
+                modalContent.innerHTML = `<iframe src="${src}" frameborder="0" allowfullscreen></iframe>`;
+                modal.style.display = 'flex';
+            });
+        });
+
+        closeModal.onclick = () => {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        const heroBtn = document.querySelector('.hero-text .btn');
+        heroBtn.addEventListener('mouseenter', () => {
+            heroBtn.classList.add('animate__animated', 'animate__pulse');
+        });
+        heroBtn.addEventListener('mouseleave', () => {
+            heroBtn.classList.remove('animate__animated', 'animate__pulse');
+        });
+    </script>
+</body>
+</html>
