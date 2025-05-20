@@ -9,15 +9,20 @@
         gtag('config', 'G-DN9PTRHS4G');
     </script>
 
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Swuei | Downloads</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-        <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swuei | Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="downloads.js"></script>
+
 </head>
 <body>
     <div class="top-bar">
@@ -72,30 +77,6 @@
             <img src="https://i.ibb.co/MDhCjGRL/eye-block.png" alt="Download Icon" class="hero-logo" />
         </div>
     </section>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCz9MLnvwdLgHLI947uZGzDZFQipJKB8Gg",
-            authDomain: "swuei-portfolio.firebaseapp.com",
-            projectId: "swuei-portfolio",
-            storageBucket: "swuei-portfolio.appspot.com",
-            messagingSenderId: "498855900959",
-            appId: "1:498855900959:web:1b6a010095b0914776a22a",
-            measurementId: "G-3MZFQS8GQ0"
-        };
-
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-    </script>
 
     <section id="model-packs" class="download-section" data-aos="fade-up">
         <div class="download-header">
@@ -376,140 +357,5 @@
         </div>
         <p>&copy; 2025 Swuei. All rights reserved.</p>
     </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-
-        async function handleDownload(fileId, fileUrl) {
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
-            btn.disabled = true;
-
-            try {
-                await trackDownload(fileId);
-
-                window.open(fileUrl, '_blank');
-            } catch (error) {
-                console.error("Download failed:", error);
-                window.open(fileUrl, '_blank');
-            } finally {
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }, 1000);
-            }
-        }
-
-        const notification = document.createElement('div');
-        notification.className = 'download-notification';
-        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
-        document.body.appendChild(notification);
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const counters = document.querySelectorAll('[data-counter]');
-            counters.forEach(counter => {
-                const fileId = counter.getAttribute('data-counter');
-                updateCounter(fileId);
-            });
-
-            document.querySelectorAll('.download-btn[data-download="true"]').forEach(btn => {
-                btn.removeAttribute('onclick');
-
-                btn.addEventListener('click', function (e) {
-                    const downloadItem = this.closest('.download-item');
-                    if (!downloadItem) return;
-
-                    const counterElement = downloadItem.querySelector('[data-counter]');
-                    if (!counterElement) return;
-
-                    const fileId = counterElement.getAttribute('data-counter');
-                    const downloadUrl = this.getAttribute('href');
-
-                    if (!fileId || !downloadUrl) return;
-
-                    if (this.classList.contains('disabled')) {
-                        e.preventDefault();
-                        showNotification();
-                        return;
-                    }
-
-                    trackDownload(e, fileId, this, downloadUrl);
-                });
-            });
-        });
-
-        function showNotification() {
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        async function updateCounter(fileId) {
-            try {
-                const snapshot = await db.collection("downloads").where("fileId", "==", fileId).get();
-                const counterElement = document.querySelector(`[data-counter="${fileId}"] span`);
-                if (counterElement) {
-                    counterElement.textContent = snapshot.size;
-                }
-            } catch (error) {
-                console.error(`Error updating counter for ${fileId}:`, error);
-            }
-        }
-
-        async function trackDownload(event, fileId, button, downloadUrl) {
-            event.preventDefault();
-
-            const originalHtml = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            button.classList.add('loading');
-
-            try {
-                const downloadKey = `downloaded_${fileId}`;
-                if (localStorage.getItem(downloadKey)) {
-                    showNotification();
-                    button.innerHTML = originalHtml;
-                    button.classList.remove('loading');
-                    return;
-                }
-
-                await db.collection("downloads").add({
-                    fileId: fileId,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    userAgent: navigator.userAgent,
-                    source: 'mediafire'
-                });
-
-                localStorage.setItem(downloadKey, 'true');
-
-                await updateCounter(fileId);
-
-                setTimeout(() => {
-                    window.open(downloadUrl, '_blank');
-                }, 300);
-
-                button.innerHTML = '<i class="fas fa-check"></i> Downloaded';
-                button.classList.remove('loading');
-                button.classList.add('disabled');
-
-            } catch (error) {
-                console.error("Download tracking failed:", error);
-
-                if (downloadUrl) {
-                    window.open(downloadUrl, '_blank');
-                }
-
-                button.innerHTML = originalHtml;
-                button.classList.remove('loading');
-            }
-        }
-    </script>
 </body>
 </html>
