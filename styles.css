@@ -1106,6 +1106,113 @@ footer {
         #privacy .privacy-update p {
             margin-bottom: 0.5rem;
         }
+    #update .update-update {
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #333;
+        font-family: 'Roboto', sans-serif;
+    }
+
+        #update .update-update p {
+            margin-bottom: 0.5rem;
+        }
+.download-pageflipper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.page-link {
+    color: #00ffd5;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+    .page-link.active {
+        background: rgba(0, 255, 213, 0.1);
+        border: 1px solid #00ffd5;
+    }
+
+    .page-link:hover:not(.active) {
+        background: rgba(0, 255, 213, 0.05);
+        transform: translateY(-2px);
+    }
+
+.page-divider {
+    color: #555;
+    font-weight: bold;
+}
+
+.arrow-btn {
+    background: transparent;
+    border: none;
+    color: #00ffd5;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+    .arrow-btn:hover {
+        background: rgba(0, 255, 213, 0.1);
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+    }
+
+    .arrow-btn:disabled {
+        color: #555;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        background: transparent;
+    }
+
+@keyframes bounceRight {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes bounceLeft {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-5px);
+    }
+}
+
+.arrow-right:hover i {
+    animation: bounceRight 0.5s infinite;
+}
+
+.arrow-left:hover i {
+    animation: bounceLeft 0.5s infinite;
+}
 
 @media (max-width: 768px) {
     #privacy .privacy-content {
@@ -1150,4 +1257,5 @@ footer {
     .discord-widget iframe {
         height: 350px;
     }
+
 }

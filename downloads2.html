@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-DN9PTRHS4G');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swuei | Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="downloads.js"></script>
+
+</head>
+<body>
+    <div class="top-bar">
+        <nav class="top-bar-nav">
+            <button class="top-bar-btn" onclick="window.location.href='index.html#about'">
+                <i class="fas fa-user"></i>
+                <span>About Me</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
+                <i class="fas fa-cube"></i>
+                <span>Models</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://discord.com/users/817968354979610624', '_blank')">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
+                <i class="fas fa-user-circle"></i>
+                <span>Sketchfab</span>
+            </button>
+            <button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='#privacy'">
+                <i class="fas fa-shield-alt"></i>
+                <span>Privacy</span>
+            </button>
+        </nav>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Download Center</h2>
+                <p>
+                    Most of my free models, all in one place — no more DM requests! This hub is regularly updated with new resources for server owners and players alike.
+                </p>
+
+                <div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
+                    <p>
+                        This is a <strong>prototype</strong> download page. Some features might not work perfectly yet — updates are on the way. If any of the download links or download counters don't work, please message me on discord @swuei.
+                    </p>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <a href="https://sketchfab.com/swuei" class="btn" target="_blank" rel="noopener noreferrer">Sketchfab</a>
+                    <a href="#privacy" class="btn" style="background-color: #00ffd5; color: #111;">Privacy Policy</a>
+                </div>
+            </div>
+
+            <img src="https://i.ibb.co/MDhCjGRL/eye-block.png" alt="Download Icon" class="hero-logo" />
+        </div>
+    </section>
+
+    <section id="model-packs" class="download-section" data-aos="fade-up">
+        <div class="download-header">
+            <h3 class="download-title">Swuei's 3D Models - Page 2</h3>
+        </div>
+        <p class="download-description">
+            Second page of my models
+        </p>
+
+        <div class="download-pageflipper">
+            <a href="downloads.html" class="arrow-btn arrow-left">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <a href="downloads.html" class="page-link">1</a>
+            <span class="page-divider">|</span>
+            <a href="downloads2.html" class="page-link active">2</a>
+            <button class="arrow-btn arrow-right" disabled>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="download-columns">
+            <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+                <div class="download-item">
+                    <div class="download-item-header">
+                        <h4>Coming Soon!</h4>
+                        <span class="download-item-count" data-counter="coming-soon-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <button class="download-btn" disabled>
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </button>
+                        <button class="download-btn" disabled>
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> -- MB</span>
+                        <span><i class="fas fa-cube"></i> -- models</span>
+                        <span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self Note: This is the start of the right collum -->
+            <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+                <div class="download-item">
+                    <div class="download-item-header">
+                        <h4>Coming Soon!</h4>
+                        <span class="download-item-count" data-counter="coming-soon-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <button class="download-btn" disabled>
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </button>
+                        <button class="download-btn" disabled>
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> -- MB</span>
+                        <span><i class="fas fa-cube"></i> -- models</span>
+                        <span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="privacy" class="privacy-section">
+        <div class="privacy-container">
+            <h2>Privacy Policy</h2>
+            <div class="privacy-content">
+                <div class="privacy-column">
+                    <h3>Data Collection</h3>
+                    <p>I use Google Analytics to collect anonymous usage data to improve my website. This includes:</p>
+                    <ul>
+                        <li>Pages visited</li>
+                        <li>Time spent on site</li>
+                        <li>Download interactions</li>
+                        <li>Device and browser information</li>
+                    </ul>
+                </div>
+                <div class="privacy-column">
+                    <h3>Download Tracking</h3>
+                    <p>When you download files, we track:</p>
+                    <ul>
+                        <li>Which files are downloaded</li>
+                        <li>Timestamp of download</li>
+                        <li>Basic user agent information</li>
+                    </ul>
+                    <p>This helps me understand which resources are most valuable to my users.</p>
+                </div>
+                <div class="privacy-column">
+                    <h3>Your Choices</h3>
+                    <p>You can control what data is collected:</p>
+                    <ul>
+                        <li>Use browser settings to block cookies</li>
+                        <li>Opt-out of Google Analytics tracking</li>
+                        <li>Disable JavaScript to prevent tracking</li>
+                    </ul>
+                    <p>I don't collect personally identifiable information without your consent.</p>
+                </div>
+            </div>
+            <div class="privacy-update">
+                <p><strong>Last Updated:</strong> May 20, 2025</p>
+                <p>This policy may be updated periodically. Please check back for changes.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://discord.com/users/817968354979610624" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://sketchfab.com/Swuei" target="_blank" aria-label="Sketchfab"><i class="fas fa-cube"></i></a>
+            <a href="https://github.com/Swuei" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2025 Swuei. All rights reserved.</p>
+    </footer>
+</body>
+</html>
