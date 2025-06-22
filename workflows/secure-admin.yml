@@ -1,0 +1,31 @@
+name: Admin
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate New Token
+        run: |
+          # Generate 64-character random token
+          TOKEN=$(openssl rand -hex 32)
+          EXPIRY=$(( $(date +%s) + 3600 ))  # 1-hour expiry
+          
+          # Inject into ALL HTML files
+          for file in downloads*.html; do
+            sed -i "s|<!-- ADMIN_TOKEN -->|${TOKEN}|g" "$file"
+            sed -i "s|<!-- TOKEN_EXPIRY -->|${EXPIRY}|g" "$file"
+          done
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
