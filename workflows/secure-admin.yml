@@ -13,16 +13,28 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Generate New Token
+        id: token-gen
         run: |
-          # Generate 64-character random token
           TOKEN=$(openssl rand -hex 32)
-          EXPIRY=$(( $(date +%s) + 3600 ))  # 1-hour expiry
+          EXPIRY=$(( $(date +%s) + 3600 ))
           
-          # Inject into ALL HTML files
           for file in downloads*.html; do
             sed -i "s|<!-- ADMIN_TOKEN -->|${TOKEN}|g" "$file"
             sed -i "s|<!-- TOKEN_EXPIRY -->|${EXPIRY}|g" "$file"
           done
+
+          echo "TOKEN=${TOKEN}" >> $GITHUB_OUTPUT
+          echo "EXPIRY=${EXPIRY}" >> $GITHUB_OUTPUT
+
+      - name: Notify Token via Discord
+        if: success()
+        run: |
+          curl -X POST \
+            "https://discord.com/api/webhooks/${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "content": "🔑 New Admin Token: ${{ steps.token-gen.outputs.TOKEN }}\n⏳ Expires: $(date -d @${{ steps.token-gen.outputs.EXPIRY }})\n📄 Page: https://swuei.github.io/Portfolio/downloads"
+            }'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
