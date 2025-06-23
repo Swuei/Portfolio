@@ -16,7 +16,7 @@ jobs:
           
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
-          echo "message=New admin token generated:\nToken: ||$TOKEN||\nExpires: $EXPIRY" >> $GITHUB_OUTPUT
+          echo "message=🛡️ **New Admin Token**\n\n🔑 Token: \`$TOKEN\`\n⏳ Expires: $EXPIRY\n\nUse in: [Your Website](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY})" >> $GITHUB_OUTPUT
 
       - name: Send to Discord
         uses: Ilshidur/action-discord@master
