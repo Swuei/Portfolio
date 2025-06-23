@@ -6,7 +6,7 @@ on:
         description: 'Token to validate'
         required: true
       expiry:
-        description: 'Token expiry in ISO 8601 format (e.g., 2025-06-23T17:06:30Z)'
+        description: 'Token expiry in ISO 8601 format (e.g., 3021-06-26T12:05:40Z)'
         required: true
 
 jobs:
