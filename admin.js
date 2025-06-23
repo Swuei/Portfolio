@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             adminModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
             checkAuthStatus();
         });
 
@@ -40,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function checkAuthStatus() {
         const token = localStorage.getItem('adminSecret');
         const expiry = localStorage.getItem('tokenExpiry');
-        
+
         if (token && expiry && new Date(expiry) > new Date()) {
             loginForm.style.display = 'none';
             entryForm.style.display = 'block';
@@ -71,6 +70,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
+                const expiryDate = new Date(expiry);
+                if (isNaN(expiryDate.getTime())) {
+                    showNotification('Invalid expiry format', 'error');
+                    return;
+                }
+
+                const isoExpiry = expiryDate.toISOString();
+
                 const response = await fetch(AUTH_ENDPOINT, {
                     method: 'POST',
                     headers: {
@@ -82,14 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         ref: 'main',
                         inputs: {
                             token: token,
-                            expiry: expiry
+                            expiry: isoExpiry
                         }
                     })
                 });
 
                 if (response.status === 204) {
                     localStorage.setItem('adminSecret', token);
-                    localStorage.setItem('tokenExpiry', expiry);
+                    localStorage.setItem('tokenExpiry', isoExpiry);
                     checkAuthStatus();
                     showNotification('Validation request sent. Please check your email for confirmation.', 'success');
                 } else {
@@ -102,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('adminSecret');
@@ -112,80 +118,75 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-if (submitEntryBtn) {
-    submitEntryBtn.addEventListener('click', async () => {
-        const formData = {
-            name: document.getElementById('entryName').value,
-            sketchfabLink: document.getElementById('sketchfabLink').value,
-            mediafireLink: document.getElementById('mediafireLink').value,
-            counterName: document.getElementById('counterName').value,
-            fileSize: document.getElementById('fileSize').value,
-            modelCount: document.getElementById('modelCount').value,
-            uploadDate: document.getElementById('uploadDate').value,
-            targetPage: document.getElementById('targetPage').value
-        };
+    if (submitEntryBtn) {
+        submitEntryBtn.addEventListener('click', async () => {
+            const token = localStorage.getItem('adminSecret');
+            if (!token) {
+                showNotification('Please log in first', 'error');
+                return;
+            }
 
-        if (!formData.name || !formData.mediafireLink || !formData.counterName) {
-            showNotification('Please fill all required fields', 'error');
-            return;
-        }
+            const formData = {
+                name: document.getElementById('entryName').value,
+                sketchfabLink: document.getElementById('sketchfabLink').value,
+                mediafireLink: document.getElementById('mediafireLink').value,
+                counterName: document.getElementById('counterName').value,
+                fileSize: document.getElementById('fileSize').value,
+                modelCount: document.getElementById('modelCount').value,
+                uploadDate: document.getElementById('uploadDate').value,
+                targetPage: document.getElementById('targetPage').value
+            };
 
-        try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('adminSecret')}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json',
-                    'X-GitHub-Api-Version': '2022-11-28'
-                },
-                body: JSON.stringify({
-                    event_type: 'update_downloads',
-                    client_payload: formData
-                })
-            });
+            if (!formData.name || !formData.mediafireLink || !formData.counterName) {
+                showNotification('Please fill all required fields', 'error');
+                return;
+            }
 
-            const responseText = await response.text();
-            let responseData = {};
-            
             try {
-                responseData = responseText ? JSON.parse(responseText) : {};
-            } catch (e) {
-                console.warn('Failed to parse JSON response:', responseText);
-            }
-
-            if (!response.ok) {
-                throw new Error(responseData.message || `HTTP ${response.status}`);
-            }
-
-            showNotification('Entry submitted for processing!', 'success');
-            
-            const form = document.getElementById('entryForm');
-            if (form) {
-                const inputs = form.querySelectorAll('input, select, textarea');
-                inputs.forEach(input => {
-                    if (input.type !== 'submit' && input.type !== 'button') {
-                        input.value = '';
-                    }
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    },
+                    body: JSON.stringify({
+                        event_type: 'update_downloads',
+                        client_payload: formData
+                    })
                 });
-            }
 
-        } catch (error) {
-            console.error('Submission error:', error);
-            let errorMessage = error.message;
-            
-            if (error instanceof SyntaxError) {
-                errorMessage = 'Invalid server response';
-            } else if (error.message.includes('401')) {
-                errorMessage = 'Authentication failed - please log in again';
-            } else if (error.message.includes('500')) {
-                errorMessage = 'Server error - please try again later';
+                if (!response.ok) {
+                    const responseText = await response.text();
+                    let errorMessage = `HTTP ${response.status}`;
+                    try {
+                        const responseData = JSON.parse(responseText);
+                        errorMessage = responseData.message || errorMessage;
+                    } catch (e) {
+                        console.warn('Failed to parse JSON response:', responseText);
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                showNotification('Entry submitted for processing!', 'success');
+                document.getElementById('entryForm').reset();
+            } catch (error) {
+                console.error('Submission error:', error);
+                let errorMessage = error.message;
+
+                if (error instanceof SyntaxError) {
+                    errorMessage = 'Invalid server response';
+                } else if (error.message.includes('401')) {
+                    errorMessage = 'Authentication failed - please log in again';
+                } else if (error.message.includes('500')) {
+                    errorMessage = 'Server error - please try again later';
+                }
+
+                showNotification(`Submission failed: ${errorMessage}`, 'error');
             }
-            
-            showNotification(`Submission failed: ${errorMessage}`, 'error');
-        }
-    });
-}
+        });
+    }
 
     function showNotification(message, type = 'info') {
         if (!statusNotification) return;
