@@ -69,24 +69,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const expiryDate = new Date(expiry);
-            if (isNaN(expiryDate.getTime())) {
-                showNotification('Invalid expiry format - use YYYY-MM-DD HH:MM', 'error');
-                return;
-            }
+            try {
+                const response = await fetch(AUTH_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ref: 'main',
+                        inputs: {
+                            token: token,
+                            expiry: expiry
+                        }
+                    })
+                });
 
-            if (expiryDate < new Date()) {
-                showNotification('Token has expired', 'error');
-                return;
+                if (response.status === 204) {
+                    localStorage.setItem('adminSecret', token);
+                    localStorage.setItem('tokenExpiry', expiry);
+                    checkAuthStatus();
+                    showNotification('Validation request sent. Please check your email for confirmation.', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Validation error:', error);
+                showNotification('Token validation failed', 'error');
             }
-
-            localStorage.setItem('adminSecret', token);
-            localStorage.setItem('tokenExpiry', expiry);
-            
-            checkAuthStatus();
-            showNotification('Successfully logged in', 'success');
         });
     }
+
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
