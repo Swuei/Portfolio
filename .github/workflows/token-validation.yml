@@ -7,7 +7,7 @@ on:
         description: 'Token to validate'
         required: true
       expiry:
-        description: 'Token expiry in ISO 8601 format (e.g., 3021-06-26T12:05:40Z)'
+        description: 'Token expiry in ISO 8601 format (e.g., 2025-06-23T20:29:06Z)'
         required: true
 
 jobs:
@@ -22,17 +22,18 @@ jobs:
         env:
           EXPIRY_ENCRYPTION_KEY: ${{ secrets.EXPIRY_ENCRYPTION_KEY }}
         run: |
-          EXPECTED_EXPIRY=$(openssl enc -aes-256-cbc -d -base64 -in .github/expiry.enc -pbkdf2 -pass pass:"$EXPIRY_ENCRYPTION_KEY")
-          echo "expected_expiry=$EXPECTED_EXPIRY" >> $GITHUB_OUTPUT
+          RAW_EXPIRY=$(openssl enc -aes-256-cbc -d -base64 -in .github/expiry.enc -pbkdf2 -pass pass:"$EXPIRY_ENCRYPTION_KEY")
+          CLEAN_EXPIRY=$(echo "$RAW_EXPIRY" | tr -d '\r\n')
+          echo "expected_expiry=$CLEAN_EXPIRY" >> $GITHUB_OUTPUT
 
       - name: Validate Token
         env:
           VALID_TOKEN: ${{ secrets.ADMIN_PANEL_TOKEN }}
           EXPECTED_EXPIRY: ${{ steps.load_expiry.outputs.expected_expiry }}
         run: |
-          echo "Input token: ${{ inputs.token }}"
-          echo "Input expiry: ${{ inputs.expiry }}"
-          echo "Expected expiry: $EXPECTED_EXPIRY"
+          echo "Input token: '${{ inputs.token }}'"
+          echo "Input expiry: '${{ inputs.expiry }}'"
+          echo "Expected expiry: '$EXPECTED_EXPIRY'"
 
           if [ "${{ inputs.token }}" != "$VALID_TOKEN" ]; then
             echo "::error::Invalid token"
@@ -44,8 +45,8 @@ jobs:
             exit 1
           fi
 
-          if ! echo "${{ inputs.expiry }}" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$'; then
-            echo "::error::Invalid ISO 8601 format. Expected YYYY-MM-DDTHH:MM:SS(.sss)?Z"
+          if ! echo "${{ inputs.expiry }}" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'; then
+            echo "::error::Invalid ISO 8601 format. Expected YYYY-MM-DDTHH:MM:SSZ"
             exit 1
           fi
 
@@ -57,4 +58,4 @@ jobs:
             exit 1
           fi
 
-          echo "Token is valid"
+          echo "Token is valid ✅"
