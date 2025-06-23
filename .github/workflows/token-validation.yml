@@ -26,8 +26,8 @@ jobs:
             exit 1
           fi
 
-          if ! echo "${{ inputs.expiry }}" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'; then
-            echo "::error::Invalid ISO 8601 format. Expected YYYY-MM-DDTHH:MM:SSZ"
+          if ! echo "${{ inputs.expiry }}" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$'; then
+             echo "::error::Invalid ISO 8601 format. Expected YYYY-MM-DDTHH:MM:SS(.sss)?Z"
             exit 1
           fi
 
