@@ -24,82 +24,85 @@ jobs:
           pip install beautifulsoup4
           sudo apt-get update && sudo apt-get install -y jq
 
+      - name: Create processing script
+        run: |
+          cat > process_entry.py << 'EOPY'
+import json
+import os
+from bs4 import BeautifulSoup
+
+def main():
+    try:
+        with open('payload.json') as f:
+            payload = json.load(f)
+        
+        target_page = payload['targetPage']
+        
+        with open(target_page, 'r') as f:
+            soup = BeautifulSoup(f, 'html.parser')
+
+        download_column = soup.find('div', class_='download-column')
+        
+        if not download_column:
+            print('Error: Could not find download-column div')
+            return 1
+
+        new_entry = f'''
+        <div class="download-item">
+            <div class="download-item-header">
+                <h4>{payload["name"]}</h4>
+                <span class="download-item-count" data-counter="{payload["counterName"]}">
+                    <i class="fas fa-download"></i> <span>0</span>
+                </span>
+            </div>
+            <div class="download-links">
+                <a href="{payload["mediafireLink"]}" class="download-btn" target="_blank" data-download="true">
+                    <i class="fas fa-file-archive"></i> Download ZIP
+                </a>
+                <a href="{payload["sketchfabLink"]}" class="download-btn" target="_blank">
+                    <i class="fas fa-eye"></i> Preview
+                </a>
+            </div>
+            <div class="download-meta">
+                <span><i class="fas fa-file-archive"></i> {payload["fileSize"]}</span>
+                <span><i class="fas fa-cube"></i> {payload["modelCount"]}</span>
+                <span><i class="fas fa-calendar-alt"></i> {payload["uploadDate"]}</span>
+            </div>
+        </div>
+        '''
+
+        download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
+        
+        with open(target_page, 'w') as f:
+            f.write(str(soup))
+        
+        print('Successfully updated the download page')
+        return 0
+
+    except Exception as e:
+        print(f'Error processing entry: {str(e)}')
+        return 1
+
+if __name__ == '__main__':
+    exit(main())
+EOPY
+
       - name: Process entry
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          PAYLOAD=$(jq -n \
-            --arg name "$(echo '${{ github.event.client_payload.name }}' | jq -R .)" \
-            --arg sketchfab "$(echo '${{ github.event.client_payload.sketchfabLink }}' | jq -R .)" \
-            --arg mediafire "$(echo '${{ github.event.client_payload.mediafireLink }}' | jq -R .)" \
-            --arg counter "$(echo '${{ github.event.client_payload.counterName }}' | jq -R .)" \
-            --arg size "$(echo '${{ github.event.client_payload.fileSize }}' | jq -R .)" \
-            --arg models "$(echo '${{ github.event.client_payload.modelCount }}' | jq -R .)" \
-            --arg date "$(echo '${{ github.event.client_payload.uploadDate }}' | jq -R .)" \
-            --arg page "$(echo '${{ github.event.client_payload.targetPage }}' | jq -R .)" \
-            '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page}')
+          jq -n \
+            --arg name "${{ github.event.client_payload.name }}" \
+            --arg sketchfab "${{ github.event.client_payload.sketchfabLink }}" \
+            --arg mediafire "${{ github.event.client_payload.mediafireLink }}" \
+            --arg counter "${{ github.event.client_payload.counterName }}" \
+            --arg size "${{ github.event.client_payload.fileSize }}" \
+            --arg models "${{ github.event.client_payload.modelCount }}" \
+            --arg date "${{ github.event.client_payload.uploadDate }}" \
+            --arg page "${{ github.event.client_payload.targetPage }}" \
+            '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page}' > payload.json
 
-          echo "Processing entry with payload: $PAYLOAD"
-
-          python3 <<'EOF'
-import os
-import json
-from bs4 import BeautifulSoup
-
-try:
-    payload = json.loads(os.environ['PAYLOAD'])
-    target_page = payload['targetPage']
-
-    with open(target_page, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, 'html.parser')
-
-    download_column = soup.find('div', class_='download-column')
-
-    if download_column:
-        new_entry = '''<!-- Self Note: When adding new products start from here -->
-<div class="download-item">
-    <div class="download-item-header">
-        <h4>{name}</h4>
-        <span class="download-item-count" data-counter="{counter}">
-            <i class="fas fa-download"></i> <span>0</span>
-        </span>
-    </div>
-    <div class="download-links">
-        <a href="{mediafire}" class="download-btn" target="_blank" data-download="true">
-            <i class="fas fa-file-archive"></i> Download ZIP
-        </a>
-        <a href="{sketchfab}" class="download-btn" target="_blank">
-            <i class="fas fa-eye"></i> Preview
-        </a>
-    </div>
-    <div class="download-meta">
-        <span><i class="fas fa-file-archive"></i> {size}</span>
-        <span><i class="fas fa-cube"></i> {models}</span>
-        <span><i class="fas fa-calendar-alt"></i> {date}</span>
-    </div>
-</div>'''.format(
-            name=payload['name'],
-            counter=payload['counterName'],
-            mediafire=payload['mediafireLink'],
-            sketchfab=payload['sketchfabLink'],
-            size=payload['fileSize'],
-            models=payload['modelCount'],
-            date=payload['uploadDate']
-        )
-
-        download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
-
-        with open(target_page, 'w', encoding='utf-8') as f:
-            f.write(str(soup))
-        print('✅ Successfully updated the download page')
-    else:
-        print('❌ Error: Could not find download-column div')
-        exit(1)
-
-except Exception as e:
-    print(f'❌ Error processing entry: {str(e)}')
-    exit(1)
-EOF
+          python3 process_entry.py || exit 1
 
       - name: Commit changes
         run: |
