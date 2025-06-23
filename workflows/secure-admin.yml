@@ -1,43 +1,28 @@
 name: Admin
-
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
   schedule:
     - cron: '0 * * * *'
 
 jobs:
-  deploy:
+  generate-token:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate New Token
-        id: token-gen
+      - name: Generate token
+        id: generate
         run: |
-          TOKEN=$(openssl rand -hex 32)
-          EXPIRY=$(( $(date +%s) + 3600 ))
+          # Generate random token (32 characters)
+          TOKEN=$(openssl rand -hex 16)
+          EXPIRY=$(date -d "+55 minutes" "+%Y-%m-%d %H:%M") # 55 minute expiry
           
-          for file in downloads*.html; do
-            sed -i "s|<!-- ADMIN_TOKEN -->|${TOKEN}|g" "$file"
-            sed -i "s|<!-- TOKEN_EXPIRY -->|${EXPIRY}|g" "$file"
-          done
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
+          
+          echo "message=New admin token generated:\nToken: $TOKEN\nExpires: $EXPIRY\n\nUse this in the admin panel." >> $GITHUB_OUTPUT
 
-          echo "TOKEN=${TOKEN}" >> $GITHUB_OUTPUT
-          echo "EXPIRY=${EXPIRY}" >> $GITHUB_OUTPUT
-
-      - name: Notify Token via Discord
-        if: success()
-        run: |
-          curl -X POST \
-            "https://discord.com/api/webhooks/${{ secrets.DISCORD_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "content": "🔑 New Admin Token: ${{ steps.token-gen.outputs.TOKEN }}\n⏳ Expires: $(date -d @${{ steps.token-gen.outputs.EXPIRY }})\n📄 Page: https://swuei.github.io/Portfolio/downloads"
-            }'
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Send to Discord
+        uses: Ilshidur/action-discord@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          args: ${{ steps.generate.outputs.message }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
