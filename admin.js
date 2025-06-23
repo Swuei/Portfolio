@@ -1,3 +1,8 @@
+console.log("Admin script loaded");
+
+console.log("Admin button element:", adminBtn);
+console.log("Admin modal element:", adminModal);
+
 ﻿const GITHUB_REPO = 'Swuei/Portfolio';
 const DISCORD_WEBHOOK_URL = '';
 
