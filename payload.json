@@ -1,10 +1,10 @@
 {
-  "name": "TEST",
-  "sketchfabLink": "https://sketchfab.com/swuei",
-  "mediafireLink": "https://sketchfab.com/swuei",
-  "counterName": "test-counter-counter",
+  "name": "Test",
+  "sketchfabLink": "Test",
+  "mediafireLink": "TEST",
+  "counterName": "TEST",
   "fileSize": "TEST",
   "modelCount": "TEST",
   "uploadDate": "TEST",
-  "targetPage": "downloads2.html"
+  "targetPage": "downloads3.html"
 }
