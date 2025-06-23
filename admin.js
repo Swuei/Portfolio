@@ -1,5 +1,5 @@
 ﻿const GITHUB_REPO = 'Swuei/Portfolio';
-const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
+const DISCORD_WEBHOOK_URL = '';
 
 async function sendDiscordNotification(message) {
     if (!DISCORD_WEBHOOK_URL) {
