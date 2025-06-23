@@ -3,17 +3,28 @@ on:
   repository_dispatch:
     types: [update_downloads]
 
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
 jobs:
   process:
     runs-on: ubuntu-latest
+    
+   
+    permissions:
+      contents: write
+      
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          persist-credentials: false
+          persist-credentials: true
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
             
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
           
