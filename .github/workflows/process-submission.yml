@@ -12,88 +12,96 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10'
+          cache: 'pip'
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install beautifulsoup4
 
       - name: Process entry
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          # Properly escape the JSON payload
+          # Install jq for JSON processing
+          sudo apt-get update && sudo apt-get install -y jq
+
+          # Create properly escaped JSON payload
           PAYLOAD=$(jq -n \
-            --arg name "${{ github.event.client_payload.name }}" \
-            --arg sketchfab "${{ github.event.client_payload.sketchfabLink }}" \
-            --arg mediafire "${{ github.event.client_payload.mediafireLink }}" \
-            --arg counter "${{ github.event.client_payload.counterName}}" \
-            --arg size "${{ github.event.client_payload.fileSize}}" \
-            --arg models "${{ github.event.client_payload.modelCount}}" \
-            --arg date "${{ github.event.client_payload.uploadDate}}" \
-            --arg page "${{ github.event.client_payload.targetPage}}" \
+            --arg name "$(echo '${{ github.event.client_payload.name }}' | jq -R .)" \
+            --arg sketchfab "$(echo '${{ github.event.client_payload.sketchfabLink }}' | jq -R .)" \
+            --arg mediafire "$(echo '${{ github.event.client_payload.mediafireLink }}' | jq -R .)" \
+            --arg counter "$(echo '${{ github.event.client_payload.counterName }}' | jq -R .)" \
+            --arg size "$(echo '${{ github.event.client_payload.fileSize }}' | jq -R .)" \
+            --arg models "$(echo '${{ github.event.client_payload.modelCount }}' | jq -R .)" \
+            --arg date "$(echo '${{ github.event.client_payload.uploadDate }}' | jq -R .)" \
+            --arg page "$(echo '${{ github.event.client_payload.targetPage }}' | jq -R .)" \
             '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page}')
 
           echo "Processing entry with payload: $PAYLOAD"
 
           python3 -c "
-          from bs4 import BeautifulSoup
-          import json
-          import os
-          import sys
+import os
+import json
+from bs4 import BeautifulSoup
 
-          try:
-              payload = json.loads(os.environ['PAYLOAD'])
-              target_page = payload['targetPage']
+try:
+    payload = json.loads(os.environ['PAYLOAD'])
+    target_page = payload['targetPage']
 
-              with open(target_page, 'r', encoding='utf-8') as f:
-                  soup = BeautifulSoup(f, 'html.parser')
+    with open(target_page, 'r', encoding='utf-8') as f:
+        soup = BeautifulSoup(f, 'html.parser')
 
-              download_column = soup.find('div', class_='download-column')
+    download_column = soup.find('div', class_='download-column')
 
-              if download_column:
-                  new_entry = f'''
-                  <!-- Self Note: When adding new products start from here -->
-                  <div class=\"download-item\">
-                      <div class=\"download-item-header\">
-                          <h4>{payload['name']}</h4>
-                          <span class=\"download-item-count\" data-counter=\"{payload['counterName']}\">
-                              <i class=\"fas fa-download\"></i> <span>0</span>
-                          </span>
-                      </div>
-                      <div class=\"download-links\">
-                          <a href=\"{payload['mediafireLink']}\" 
-                             class=\"download-btn\" 
-                             target=\"_blank\" 
-                             data-download=\"true\">
-                              <i class=\"fas fa-file-archive\"></i> Download ZIP
-                          </a>
-                          <a href=\"{payload['sketchfabLink']}\" 
-                             class=\"download-btn\" 
-                             target=\"_blank\">
-                              <i class=\"fas fa-eye\"></i> Preview
-                          </a>
-                      </div>
-                      <div class=\"download-meta\">
-                          <span><i class=\"fas fa-file-archive\"></i> {payload['fileSize']}</span>
-                          <span><i class=\"fas fa-cube\"></i> {payload['modelCount']}</span>
-                          <span><i class=\"fas fa-calendar-alt\"></i> {payload['uploadDate']}</span>
-                      </div>
-                  </div>
-                  '''
+    if download_column:
+        new_entry = f'''
+        <!-- Self Note: When adding new products start from here -->
+        <div class=\"download-item\">
+            <div class=\"download-item-header\">
+                <h4>{payload['name']}</h4>
+                <span class=\"download-item-count\" data-counter=\"{payload['counterName']}\">
+                    <i class=\"fas fa-download\"></i> <span>0</span>
+                </span>
+            </div>
+            <div class=\"download-links\">
+                <a href=\"{payload['mediafireLink']}\" 
+                   class=\"download-btn\" 
+                   target=\"_blank\" 
+                   data-download=\"true\">
+                    <i class=\"fas fa-file-archive\"></i> Download ZIP
+                </a>
+                <a href=\"{payload['sketchfabLink']}\" 
+                   class=\"download-btn\" 
+                   target=\"_blank\">
+                    <i class=\"fas fa-eye\"></i> Preview
+                </a>
+            </div>
+            <div class=\"download-meta\">
+                <span><i class=\"fas fa-file-archive\"></i> {payload['fileSize']}</span>
+                <span><i class=\"fas fa-cube\"></i> {payload['modelCount']}</span>
+                <span><i class=\"fas fa-calendar-alt\"></i> {payload['uploadDate']}</span>
+            </div>
+        </div>
+        '''
 
-                  download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
+        download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
 
-                  with open(target_page, 'w', encoding='utf-8') as f:
-                      f.write(str(soup))
-                  print('Successfully updated the download page')
-              else:
-                  print('Error: Could not find download-column div')
-                  sys.exit(1)
+        with open(target_page, 'w', encoding='utf-8') as f:
+            f.write(str(soup))
+        print('✅ Successfully updated the download page')
+    else:
+        print('❌ Error: Could not find download-column div')
+        exit(1)
 
-          except Exception as e:
-              print(f'Error processing entry: {str(e)}')
-              sys.exit(1)
-          "
+except Exception as e:
+    print(f'❌ Error processing entry: {str(e)}')
+    exit(1)
+"
 
       - name: Commit changes
         run: |
