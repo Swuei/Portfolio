@@ -1,12 +1,12 @@
 name: Token Validation
-on: 
+on:
   workflow_dispatch:
     inputs:
       token:
         description: 'Token to validate'
         required: true
       expiry:
-        description: 'Token expiry'
+        description: 'Token expiry in ISO 8601 format (e.g., 2025-06-23T17:06:30Z)'
         required: true
 
 jobs:
@@ -17,38 +17,34 @@ jobs:
         env:
           VALID_TOKEN: ${{ secrets.ADMIN_PANEL_TOKEN }}
         run: |
+          echo "Input token: ${{ inputs.token }}"
+          echo "Input expiry: ${{ inputs.expiry }}"
+          echo "Current time: $(date -u --iso-8601=seconds)"
+
           if [ "${{ inputs.token }}" != "$VALID_TOKEN" ]; then
             echo "::error::Invalid token"
             exit 1
           fi
-          
-          EXPIRY="${{ inputs.expiry }}"
-          if ! date -d "$EXPIRY" > /dev/null 2>&1; then
-            echo "::error::Invalid expiry date"
+
+          if ! echo "${{ inputs.expiry }}" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'; then
+            echo "::error::Invalid ISO 8601 format. Expected YYYY-MM-DDTHH:MM:SSZ"
             exit 1
           fi
-          
-          CURRENT_EPOCH=$(date +%s)
-          EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
-          
-          if [ $EXPIRY_EPOCH -lt $CURRENT_EPOCH ]; then
+
+          EXPIRY_UTC=$(date -u -d "${{ inputs.expiry }}" +%s 2>/dev/null)
+          if [ -z "$EXPIRY_UTC" ]; then
+            echo "::error::Failed to parse expiry date"
+            exit 1
+          fi
+
+          CURRENT_UTC=$(date -u +%s)
+
+          echo "Expiry UTC timestamp: $EXPIRY_UTC"
+          echo "Current UTC timestamp: $CURRENT_UTC"
+
+          if [ "$EXPIRY_UTC" -lt "$CURRENT_UTC" ]; then
             echo "::error::Token has expired"
             exit 1
           fi
-          
+
           echo "Token is valid"
-          
-      - name: Send Success Notification
-        if: success()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'success-notification.yml',
-              ref: 'main',
-              inputs: {
-                secret_email: '${{ secrets.NOTIFICATION_EMAIL }}'
-              }
-            })
