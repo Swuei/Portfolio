@@ -1,0 +1,28 @@
+name: Admin
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  generate-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate
+        run: |
+          # Generate random token (32 characters)
+          TOKEN=$(openssl rand -hex 16)
+          EXPIRY=$(date -d "+55 minutes" "+%Y-%m-%d %H:%M") # 55 minute expiry
+          
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
+          
+          echo "message=New admin token generated:\nToken: $TOKEN\nExpires: $EXPIRY\n\nUse this in the admin panel." >> $GITHUB_OUTPUT
+
+      - name: Send to Discord
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ${{ steps.generate.outputs.message }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
