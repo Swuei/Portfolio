@@ -118,75 +118,88 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (submitEntryBtn) {
-        submitEntryBtn.addEventListener('click', async () => {
-            const token = localStorage.getItem('adminSecret');
-            if (!token) {
-                showNotification('Please log in first', 'error');
-                return;
-            }
+   if (submitEntryBtn) {
+    submitEntryBtn.addEventListener('click', async () => {
+        const token = localStorage.getItem('adminSecret');
+        if (!token) {
+            showNotification('Please log in first', 'error');
+            return;
+        }
 
-            const formData = {
-                name: document.getElementById('entryName').value,
-                sketchfabLink: document.getElementById('sketchfabLink').value,
-                mediafireLink: document.getElementById('mediafireLink').value,
-                counterName: document.getElementById('counterName').value,
-                fileSize: document.getElementById('fileSize').value,
-                modelCount: document.getElementById('modelCount').value,
-                uploadDate: document.getElementById('uploadDate').value,
-                targetPage: document.getElementById('targetPage').value
-            };
+        const formData = {
+            name: document.getElementById('entryName').value,
+            sketchfabLink: document.getElementById('sketchfabLink').value,
+            mediafireLink: document.getElementById('mediafireLink').value,
+            counterName: document.getElementById('counterName').value,
+            fileSize: document.getElementById('fileSize').value,
+            modelCount: document.getElementById('modelCount').value,
+            uploadDate: document.getElementById('uploadDate').value,
+            targetPage: document.getElementById('targetPage').value
+        };
 
-            if (!formData.name || !formData.mediafireLink || !formData.counterName) {
-                showNotification('Please fill all required fields', 'error');
-                return;
-            }
+        if (!formData.name || !formData.mediafireLink || !formData.counterName) {
+            showNotification('Please fill all required fields', 'error');
+            return;
+        }
 
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json',
-                        'X-GitHub-Api-Version': '2022-11-28'
-                    },
-                    body: JSON.stringify({
-                        event_type: 'update_downloads',
-                        client_payload: formData
-                    })
-                });
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                },
+                body: JSON.stringify({
+                    event_type: 'update_downloads',
+                    client_payload: formData
+                })
+            });
 
-                if (!response.ok) {
-                    const responseText = await response.text();
-                    let errorMessage = `HTTP ${response.status}`;
-                    try {
-                        const responseData = JSON.parse(responseText);
-                        errorMessage = responseData.message || errorMessage;
-                    } catch (e) {
-                        console.warn('Failed to parse JSON response:', responseText);
-                    }
-                    throw new Error(errorMessage);
+            if (!response.ok) {
+                const responseText = await response.text();
+                let errorMessage = `HTTP ${response.status}`;
+                try {
+                    const responseData = JSON.parse(responseText);
+                    errorMessage = responseData.message || errorMessage;
+                } catch (e) {
+                    console.warn('Failed to parse JSON response:', responseText);
                 }
-
-                showNotification('Entry submitted for processing!', 'success');
-                document.getElementById('entryForm').reset();
-            } catch (error) {
-                console.error('Submission error:', error);
-                let errorMessage = error.message;
-
-                if (error instanceof SyntaxError) {
-                    errorMessage = 'Invalid server response';
-                } else if (error.message.includes('401')) {
-                    errorMessage = 'Authentication failed - please log in again';
-                } else if (error.message.includes('500')) {
-                    errorMessage = 'Server error - please try again later';
-                }
-
-                showNotification(`Submission failed: ${errorMessage}`, 'error');
+                throw new Error(errorMessage);
             }
-        });
-    }
+
+            showNotification('Entry submitted for processing!', 'success');
+            
+            const formElements = [
+                'entryName', 'sketchfabLink', 'mediafireLink', 'counterName',
+                'fileSize', 'modelCount', 'uploadDate'
+            ];
+            
+            formElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.value = '';
+            });
+            
+            const targetPageSelect = document.getElementById('targetPage');
+            if (targetPageSelect) targetPageSelect.selectedIndex = 0;
+
+        } catch (error) {
+            console.error('Submission error:', error);
+            let errorMessage = error.message;
+
+            if (error instanceof SyntaxError) {
+                errorMessage = 'Invalid server response';
+            } else if (error.message.includes('401')) {
+                errorMessage = 'Authentication failed - please log in again';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'Server error - please try again later';
+            }
+
+            showNotification(`Submission failed: ${errorMessage}`, 'error');
+        }
+    });
+}
 
     function showNotification(message, type = 'info') {
         if (!statusNotification) return;
