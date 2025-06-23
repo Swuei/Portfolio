@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const GITHUB_REPO = 'Swuei/Portfolio';
     const AUTH_ENDPOINT = `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/token-validation.yml/dispatches`;
+
     const DISCORD_WEBHOOK_URL = '';
 
     const adminBtn = document.getElementById('adminBtn');
@@ -38,47 +39,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkAuthStatus() {
         const token = localStorage.getItem('adminSecret');
-        const expiry = localStorage.getItem('tokenExpiry');
+        let expiry = localStorage.getItem('tokenExpiry');
 
-        if (token && expiry && new Date(expiry) > new Date()) {
-            loginForm.style.display = 'none';
-            entryForm.style.display = 'block';
-            if (adminBtn) adminBtn.style.display = 'flex';
-        } else {
-            localStorage.removeItem('adminSecret');
-            localStorage.removeItem('tokenExpiry');
-            loginForm.style.display = 'block';
-            entryForm.style.display = 'none';
+        if (token && expiry) {
+            const normalized = new Date(expiry).toISOString().replace(/\.\d{3}Z$/, 'Z');
+
+            if (new Date(normalized) > new Date()) {
+                loginForm.style.display = 'none';
+                entryForm.style.display = 'block';
+                if (adminBtn) adminBtn.style.display = 'flex';
+                return;
+            }
         }
+
+        localStorage.removeItem('adminSecret');
+        localStorage.removeItem('tokenExpiry');
+        loginForm.style.display = 'block';
+        entryForm.style.display = 'none';
     }
+
 
     checkAuthStatus();
 
     if (loginBtn) {
         loginBtn.addEventListener('click', async () => {
             const token = document.getElementById('githubToken').value.trim();
-            const expiry = document.getElementById('tokenExpiry').value.trim();
+            const expiryInput = document.getElementById('tokenExpiry').value.trim();
 
-            if (!token || !expiry) {
+            if (!token || !expiryInput) {
                 showNotification('Please enter both token and expiry', 'error');
                 return;
             }
 
-            if (!/^[a-zA-Z0-9_]{40}$/.test(token)) {
-                showNotification('Invalid token format - must be 40-character GitHub token', 'error');
+            const expiryDate = new Date(expiryInput);
+            if (isNaN(expiryDate.getTime())) {
+                showNotification('Invalid expiry format', 'error');
                 return;
             }
 
+            const isoExpiry = expiryDate.toISOString().replace(/\.\d{3}Z$/, 'Z');
+
             try {
-                const expiryDate = new Date(expiry);
-                if (isNaN(expiryDate.getTime())) {
-                    showNotification('Invalid expiry format', 'error');
-                    return;
-                }
-
-                const isoExpiry = expiryDate.toISOString();
-
-                const response = await fetch(AUTH_ENDPOINT, {
+                const dispatchRes = await fetch(AUTH_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -88,26 +90,58 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({
                         ref: 'main',
                         inputs: {
-                            token: token,
+                            token,
                             expiry: isoExpiry
                         }
                     })
                 });
 
-                if (response.status === 204) {
+                if (dispatchRes.status !== 204) {
+                    throw new Error(`Dispatch failed: HTTP ${dispatchRes.status}`);
+                }
+
+                showNotification('Validation in progress… please wait', 'info');
+
+                const ownerRepo = GITHUB_REPO.split('/');
+                const [owner, repo] = ownerRepo;
+                const workflowId = 'token-validation.yml';
+                let conclusion = null;
+                const start = Date.now();
+                const timeout = 60 * 1000;
+                const pollInterval = 3000;
+
+                while (Date.now() - start < timeout) {
+                    await new Promise(r => setTimeout(r, pollInterval));
+                    const runs = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowId}/runs?event=workflow_dispatch`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }).then(res => res.json());
+
+                    const latest = runs.workflow_runs && runs.workflow_runs[0];
+                    if (!latest) continue;
+                    if (['completed', 'failure', 'success'].includes(latest.status)) {
+                        conclusion = latest.conclusion;
+                        break;
+                    }
+                }
+
+                if (conclusion === 'success') {
                     localStorage.setItem('adminSecret', token);
                     localStorage.setItem('tokenExpiry', isoExpiry);
                     checkAuthStatus();
-                    showNotification('Validation request sent. Please check your email for confirmation.', 'success');
+                    showNotification('✅ Access granted', 'success');
                 } else {
-                    throw new Error(`HTTP ${response.status}`);
+                    throw new Error('Validation failed or timed out');
                 }
-            } catch (error) {
-                console.error('Validation error:', error);
-                showNotification('Token validation failed', 'error');
+            } catch (err) {
+                console.error(err);
+                showNotification(err.message || 'Authentication failed', 'error');
             }
         });
     }
+
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -118,88 +152,88 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-   if (submitEntryBtn) {
-    submitEntryBtn.addEventListener('click', async () => {
-        const token = localStorage.getItem('adminSecret');
-        if (!token) {
-            showNotification('Please log in first', 'error');
-            return;
-        }
+    if (submitEntryBtn) {
+        submitEntryBtn.addEventListener('click', async () => {
+            const token = localStorage.getItem('adminSecret');
+            if (!token) {
+                showNotification('Please log in first', 'error');
+                return;
+            }
 
-        const formData = {
-            name: document.getElementById('entryName').value,
-            sketchfabLink: document.getElementById('sketchfabLink').value,
-            mediafireLink: document.getElementById('mediafireLink').value,
-            counterName: document.getElementById('counterName').value,
-            fileSize: document.getElementById('fileSize').value,
-            modelCount: document.getElementById('modelCount').value,
-            uploadDate: document.getElementById('uploadDate').value,
-            targetPage: document.getElementById('targetPage').value
-        };
+            const formData = {
+                name: document.getElementById('entryName').value,
+                sketchfabLink: document.getElementById('sketchfabLink').value,
+                mediafireLink: document.getElementById('mediafireLink').value,
+                counterName: document.getElementById('counterName').value,
+                fileSize: document.getElementById('fileSize').value,
+                modelCount: document.getElementById('modelCount').value,
+                uploadDate: document.getElementById('uploadDate').value,
+                targetPage: document.getElementById('targetPage').value
+            };
 
-        if (!formData.name || !formData.mediafireLink || !formData.counterName) {
-            showNotification('Please fill all required fields', 'error');
-            return;
-        }
+            if (!formData.name || !formData.mediafireLink || !formData.counterName) {
+                showNotification('Please fill all required fields', 'error');
+                return;
+            }
 
-        try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json',
-                    'X-GitHub-Api-Version': '2022-11-28'
-                },
-                body: JSON.stringify({
-                    event_type: 'update_downloads',
-                    client_payload: formData
-                })
-            });
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    },
+                    body: JSON.stringify({
+                        event_type: 'update_downloads',
+                        client_payload: formData
+                    })
+                });
 
-            if (!response.ok) {
-                const responseText = await response.text();
-                let errorMessage = `HTTP ${response.status}`;
-                try {
-                    const responseData = JSON.parse(responseText);
-                    errorMessage = responseData.message || errorMessage;
-                } catch (e) {
-                    console.warn('Failed to parse JSON response:', responseText);
+                if (!response.ok) {
+                    const responseText = await response.text();
+                    let errorMessage = `HTTP ${response.status}`;
+                    try {
+                        const responseData = JSON.parse(responseText);
+                        errorMessage = responseData.message || errorMessage;
+                    } catch (e) {
+                        console.warn('Failed to parse JSON response:', responseText);
+                    }
+                    throw new Error(errorMessage);
                 }
-                throw new Error(errorMessage);
+
+                showNotification('Entry submitted for processing!', 'success');
+
+                const formElements = [
+                    'entryName', 'sketchfabLink', 'mediafireLink', 'counterName',
+                    'fileSize', 'modelCount', 'uploadDate'
+                ];
+
+                formElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.value = '';
+                });
+
+                const targetPageSelect = document.getElementById('targetPage');
+                if (targetPageSelect) targetPageSelect.selectedIndex = 0;
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                let errorMessage = error.message;
+
+                if (error instanceof SyntaxError) {
+                    errorMessage = 'Invalid server response';
+                } else if (error.message.includes('401')) {
+                    errorMessage = 'Authentication failed - please log in again';
+                } else if (error.message.includes('500')) {
+                    errorMessage = 'Server error - please try again later';
+                }
+
+                showNotification(`Submission failed: ${errorMessage}`, 'error');
             }
-
-            showNotification('Entry submitted for processing!', 'success');
-            
-            const formElements = [
-                'entryName', 'sketchfabLink', 'mediafireLink', 'counterName',
-                'fileSize', 'modelCount', 'uploadDate'
-            ];
-            
-            formElements.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) element.value = '';
-            });
-            
-            const targetPageSelect = document.getElementById('targetPage');
-            if (targetPageSelect) targetPageSelect.selectedIndex = 0;
-
-        } catch (error) {
-            console.error('Submission error:', error);
-            let errorMessage = error.message;
-
-            if (error instanceof SyntaxError) {
-                errorMessage = 'Invalid server response';
-            } else if (error.message.includes('401')) {
-                errorMessage = 'Authentication failed - please log in again';
-            } else if (error.message.includes('500')) {
-                errorMessage = 'Server error - please try again later';
-            }
-
-            showNotification(`Submission failed: ${errorMessage}`, 'error');
-        }
-    });
-}
+        });
+    }
 
     function showNotification(message, type = 'info') {
         if (!statusNotification) return;
