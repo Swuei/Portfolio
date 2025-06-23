@@ -2,18 +2,28 @@ import json
 import os
 from bs4 import BeautifulSoup
 
+def count_entries(soup, column_class):
+    column = soup.find('div', class_=column_class)
+    if column:
+        return len(column.find_all('div', class_='download-item'))
+    return 0
+
 def main():
     try:
         with open('payload.json') as f:
             payload = json.load(f)
-        
+
         target_page = payload['targetPage']
-        
+
         with open(target_page, 'r') as f:
             soup = BeautifulSoup(f, 'html.parser')
 
-        download_column = soup.find('div', class_='download-column')
-        
+        left_count = count_entries(soup, 'download-column')
+        right_count = count_entries(soup, 'download-column:last-child')
+
+        target_column = 'download-column' if left_count <= right_count else 'download-column:last-child'
+        download_column = soup.select_one(f'.{target_column}')
+
         if not download_column:
             print('Error: Could not find download-column div')
             return 1
@@ -43,11 +53,11 @@ def main():
         """
 
         download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
-        
+
         with open(target_page, 'w') as f:
             f.write(str(soup))
-        
-        print('Successfully updated the download page')
+
+        print(f'Successfully added entry to {target_column}')
         return 0
 
     except Exception as e:
