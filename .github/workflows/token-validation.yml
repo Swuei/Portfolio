@@ -1,0 +1,54 @@
+name: Token Validation
+on: 
+  workflow_dispatch:
+    inputs:
+      token:
+        description: 'Token to validate'
+        required: true
+      expiry:
+        description: 'Token expiry'
+        required: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Token
+        env:
+          VALID_TOKEN: ${{ secrets.ADMIN_PANEL_TOKEN }}
+        run: |
+          if [ "${{ inputs.token }}" != "$VALID_TOKEN" ]; then
+            echo "::error::Invalid token"
+            exit 1
+          fi
+          
+          EXPIRY="${{ inputs.expiry }}"
+          if ! date -d "$EXPIRY" > /dev/null 2>&1; then
+            echo "::error::Invalid expiry date"
+            exit 1
+          fi
+          
+          CURRENT_EPOCH=$(date +%s)
+          EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
+          
+          if [ $EXPIRY_EPOCH -lt $CURRENT_EPOCH ]; then
+            echo "::error::Token has expired"
+            exit 1
+          fi
+          
+          echo "Token is valid"
+          
+      - name: Send Success Notification
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'success-notification.yml',
+              ref: 'main',
+              inputs: {
+                email: 'your-email@example.com'  # Replace with your email
+              }
+            })
