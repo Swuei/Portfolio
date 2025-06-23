@@ -8,15 +8,16 @@ jobs:
   generate-token:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Generate token
         id: generate
         run: |
           TOKEN=$(openssl rand -hex 16)
           EXPIRY=$(date -u -d "55 minutes" '+%Y-%m-%dT%H:%M:%SZ')
-          
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
-          echo "message=🛡️ **New Admin Token**\n\n🔑 Token: \`$TOKEN\`\n⏳ Expires: $EXPIRY\n\nUse in: [Your Website](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY})" >> $GITHUB_OUTPUT
+          echo "message=🛡️ **New Admin Token**\n\n🔑 Token: \`$TOKEN\`\n⏳ Expires: $EXPIRY" >> $GITHUB_OUTPUT
 
       - name: Send to Discord
         uses: Ilshidur/action-discord@master
@@ -24,3 +25,11 @@ jobs:
           args: ${{ steps.generate.outputs.message }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Update download entries [skip ci]"
+          git push
