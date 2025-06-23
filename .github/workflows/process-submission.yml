@@ -1,0 +1,56 @@
+name: Process Download Entry
+on:
+  repository_dispatch:
+    types: [update_downloads]
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Process entry
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          ENTRY="<!-- Self Note: When adding new products start from here -->
+          <div class='download-item'>
+            <div class='download-item-header'>
+              <h4>${{ github.event.client_payload.name }}</h4>
+              <span class='download-item-count' data-counter='${{ github.event.client_payload.counterName }}'>
+                <i class='fas fa-download'></i> <span>0</span>
+              </span>
+            </div>
+            <div class='download-item-body'>
+              <div class='download-item-links'>
+                <a href='${{ github.event.client_payload.sketchfabLink }}' target='_blank' class='btn sketchfab-btn'>
+                  <i class='fab fa-sketchfab'></i> View on Sketchfab
+                </a>
+                <a href='${{ github.event.client_payload.mediafireLink }}' target='_blank' class='btn mediafire-btn'>
+                  <i class='fas fa-download'></i> Download (${{ github.event.client_payload.fileSize }})
+                </a>
+              </div>
+              <div class='download-item-info'>
+                <p><strong>Models:</strong> ${{ github.event.client_payload.modelCount }}</p>
+                <p><strong>Uploaded:</strong> ${{ github.event.client_payload.uploadDate }}</p>
+              </div>
+            </div>
+          </div>"
+          
+          python3 -c "
+          import re
+          with open('${{ github.event.client_payload.targetPage }}', 'r+') as f:
+              content = f.read()
+              content = re.sub(r'<!-- Self Note: When adding new products start from here -->', r'$ENTRY', content)
+              f.seek(0)
+              f.write(content)
+              f.truncate()
+          "
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Add new download entry for ${{ github.event.client_payload.name }}"
+          git push
