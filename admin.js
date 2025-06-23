@@ -97,69 +97,80 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-   if (submitEntryBtn) {
-        submitEntryBtn.addEventListener('click', async () => {
-            const formData = {
-                name: document.getElementById('entryName').value,
-                sketchfabLink: document.getElementById('sketchfabLink').value,
-                mediafireLink: document.getElementById('mediafireLink').value,
-                counterName: document.getElementById('counterName').value,
-                fileSize: document.getElementById('fileSize').value,
-                modelCount: document.getElementById('modelCount').value,
-                uploadDate: document.getElementById('uploadDate').value,
-                targetPage: document.getElementById('targetPage').value
-            };
+if (submitEntryBtn) {
+    submitEntryBtn.addEventListener('click', async () => {
+        const formData = {
+            name: document.getElementById('entryName').value,
+            sketchfabLink: document.getElementById('sketchfabLink').value,
+            mediafireLink: document.getElementById('mediafireLink').value,
+            counterName: document.getElementById('counterName').value,
+            fileSize: document.getElementById('fileSize').value,
+            modelCount: document.getElementById('modelCount').value,
+            uploadDate: document.getElementById('uploadDate').value,
+            targetPage: document.getElementById('targetPage').value
+        };
 
-            if (!formData.name || !formData.mediafireLink || !formData.counterName) {
-                showNotification('Please fill all required fields', 'error');
-                return;
-            }
+        if (!formData.name || !formData.mediafireLink || !formData.counterName) {
+            showNotification('Please fill all required fields', 'error');
+            return;
+        }
 
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('adminSecret')}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                },
+                body: JSON.stringify({
+                    event_type: 'update_downloads',
+                    client_payload: formData
+                })
+            });
+
+            const responseText = await response.text();
+            let responseData = {};
+            
             try {
-                console.log('Submitting data:', formData);
-                
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('adminSecret')}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json',
-                        'X-GitHub-Api-Version': '2022-11-28'
-                    },
-                    body: JSON.stringify({
-                        event_type: 'update_downloads',
-                        client_payload: formData
-                    })
-                });
-
-                const responseData = await response.json();
-                console.log('API Response:', responseData);
-
-                if (response.ok) {
-                    showNotification('Entry submitted for processing!', 'success');
-                    
-                    const entryForm = document.getElementById('entryForm');
-                    if (entryForm) {
-                        const inputs = entryForm.querySelectorAll('input, select');
-                        inputs.forEach(input => {
-                            if (input.type !== 'submit') {
-                                input.value = '';
-                            }
-                        });
-                    }
-                } else {
-                    throw new Error(responseData.message || 'Unknown error');
-                }
-            } catch (error) {
-                console.error('Full error:', error);
-                showNotification(`Submission failed: ${error.message}`, 'error');
-                
-                if (error.message.includes('500')) {
-                    showNotification('Server error - please try again later', 'error');
-                }
+                responseData = responseText ? JSON.parse(responseText) : {};
+            } catch (e) {
+                console.warn('Failed to parse JSON response:', responseText);
             }
-        });
-    }
+
+            if (!response.ok) {
+                throw new Error(responseData.message || `HTTP ${response.status}`);
+            }
+
+            showNotification('Entry submitted for processing!', 'success');
+            
+            const form = document.getElementById('entryForm');
+            if (form) {
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.type !== 'submit' && input.type !== 'button') {
+                        input.value = '';
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error('Submission error:', error);
+            let errorMessage = error.message;
+            
+            if (error instanceof SyntaxError) {
+                errorMessage = 'Invalid server response';
+            } else if (error.message.includes('401')) {
+                errorMessage = 'Authentication failed - please log in again';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'Server error - please try again later';
+            }
+            
+            showNotification(`Submission failed: ${errorMessage}`, 'error');
+        }
+    });
+}
 
     function showNotification(message, type = 'info') {
         if (!statusNotification) return;
