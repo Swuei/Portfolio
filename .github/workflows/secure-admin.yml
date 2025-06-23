@@ -24,7 +24,7 @@ jobs:
       - name: Generate token
         id: generate
         run: |
-          TOKEN=$(openssl rand -hex 32)
+          TOKEN=$(openssl rand -hex 40)
           EXPIRY=$(date -u -d "55 minutes" '+%Y-%m-%dT%H:%M:%SZ')
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
