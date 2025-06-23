@@ -1,4 +1,5 @@
 name: Admin Token Generator
+
 on:
   workflow_dispatch:
   schedule:
@@ -11,16 +12,14 @@ permissions:
 jobs:
   generate-token:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
       actions: write
-      
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Generate token
         id: generate
         run: |
@@ -29,6 +28,18 @@ jobs:
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           echo "expiry=$EXPIRY" >> $GITHUB_OUTPUT
           echo "message=🛡️ **New Admin Token**\n\n🔑 Token: \`$TOKEN\`\n⏳ Expires: $EXPIRY" >> $GITHUB_OUTPUT
+
+      - name: Encrypt expiry and save
+        run: |
+          mkdir -p .github
+          echo "${{ steps.generate.outputs.expiry }}" | \
+            openssl enc -aes-256-cbc -base64 -pbkdf2 -pass pass:"${{ secrets.EXPIRY_ENCRYPTION_KEY }}" > .github/expiry.enc
+
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .github/expiry.enc
+          git commit -m "Update encrypted expiry"
+          git push
 
       - name: Send to Discord
         uses: Ilshidur/action-discord@master
