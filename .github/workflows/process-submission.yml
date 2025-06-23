@@ -17,20 +17,17 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip'
-          
-      - name: Install Python dependencies
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install beautifulsoup4
+          sudo apt-get update && sudo apt-get install -y jq
 
       - name: Process entry
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          # Install jq for JSON processing
-          sudo apt-get update && sudo apt-get install -y jq
-
-          # Create properly escaped JSON payload
           PAYLOAD=$(jq -n \
             --arg name "$(echo '${{ github.event.client_payload.name }}' | jq -R .)" \
             --arg sketchfab "$(echo '${{ github.event.client_payload.sketchfabLink }}' | jq -R .)" \
@@ -44,7 +41,7 @@ jobs:
 
           echo "Processing entry with payload: $PAYLOAD"
 
-          python3 -c "
+          python3 <<'EOF'
 import os
 import json
 from bs4 import BeautifulSoup
@@ -59,35 +56,36 @@ try:
     download_column = soup.find('div', class_='download-column')
 
     if download_column:
-        new_entry = f'''
-        <!-- Self Note: When adding new products start from here -->
-        <div class=\"download-item\">
-            <div class=\"download-item-header\">
-                <h4>{payload['name']}</h4>
-                <span class=\"download-item-count\" data-counter=\"{payload['counterName']}\">
-                    <i class=\"fas fa-download\"></i> <span>0</span>
-                </span>
-            </div>
-            <div class=\"download-links\">
-                <a href=\"{payload['mediafireLink']}\" 
-                   class=\"download-btn\" 
-                   target=\"_blank\" 
-                   data-download=\"true\">
-                    <i class=\"fas fa-file-archive\"></i> Download ZIP
-                </a>
-                <a href=\"{payload['sketchfabLink']}\" 
-                   class=\"download-btn\" 
-                   target=\"_blank\">
-                    <i class=\"fas fa-eye\"></i> Preview
-                </a>
-            </div>
-            <div class=\"download-meta\">
-                <span><i class=\"fas fa-file-archive\"></i> {payload['fileSize']}</span>
-                <span><i class=\"fas fa-cube\"></i> {payload['modelCount']}</span>
-                <span><i class=\"fas fa-calendar-alt\"></i> {payload['uploadDate']}</span>
-            </div>
-        </div>
-        '''
+        new_entry = '''<!-- Self Note: When adding new products start from here -->
+<div class="download-item">
+    <div class="download-item-header">
+        <h4>{name}</h4>
+        <span class="download-item-count" data-counter="{counter}">
+            <i class="fas fa-download"></i> <span>0</span>
+        </span>
+    </div>
+    <div class="download-links">
+        <a href="{mediafire}" class="download-btn" target="_blank" data-download="true">
+            <i class="fas fa-file-archive"></i> Download ZIP
+        </a>
+        <a href="{sketchfab}" class="download-btn" target="_blank">
+            <i class="fas fa-eye"></i> Preview
+        </a>
+    </div>
+    <div class="download-meta">
+        <span><i class="fas fa-file-archive"></i> {size}</span>
+        <span><i class="fas fa-cube"></i> {models}</span>
+        <span><i class="fas fa-calendar-alt"></i> {date}</span>
+    </div>
+</div>'''.format(
+            name=payload['name'],
+            counter=payload['counterName'],
+            mediafire=payload['mediafireLink'],
+            sketchfab=payload['sketchfabLink'],
+            size=payload['fileSize'],
+            models=payload['modelCount'],
+            date=payload['uploadDate']
+        )
 
         download_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
 
@@ -101,7 +99,7 @@ try:
 except Exception as e:
     print(f'❌ Error processing entry: {str(e)}')
     exit(1)
-"
+EOF
 
       - name: Commit changes
         run: |
