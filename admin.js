@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (submitEntryBtn) {
+   if (submitEntryBtn) {
         submitEntryBtn.addEventListener('click', async () => {
             const formData = {
                 name: document.getElementById('entryName').value,
@@ -116,12 +116,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
+                console.log('Submitting data:', formData);
+                
                 const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `token ${localStorage.getItem('adminSecret')}`,
+                        'Authorization': `Bearer ${localStorage.getItem('adminSecret')}`,
                         'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-GitHub-Api-Version': '2022-11-28'
                     },
                     body: JSON.stringify({
                         event_type: 'update_downloads',
@@ -129,17 +132,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                 });
 
+                const responseData = await response.json();
+                console.log('API Response:', responseData);
+
                 if (response.ok) {
                     showNotification('Entry submitted for processing!', 'success');
-                    document.getElementById('entryForm').reset();
+                    
+                    const entryForm = document.getElementById('entryForm');
+                    if (entryForm) {
+                        const inputs = entryForm.querySelectorAll('input, select');
+                        inputs.forEach(input => {
+                            if (input.type !== 'submit') {
+                                input.value = '';
+                            }
+                        });
+                    }
                 } else {
-                    const errorData = await response.json();
-                    showNotification(`Failed to submit entry: ${errorData.message || 'Unknown error'}`, 'error');
-                    console.error('Submission error details:', errorData);
+                    throw new Error(responseData.message || 'Unknown error');
                 }
             } catch (error) {
-                showNotification('Network error - check console', 'error');
-                console.error('Submission error:', error);
+                console.error('Full error:', error);
+                showNotification(`Submission failed: ${error.message}`, 'error');
+                
+                if (error.message.includes('500')) {
+                    showNotification('Server error - please try again later', 'error');
+                }
             }
         });
     }
