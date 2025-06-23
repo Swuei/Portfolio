@@ -1,0 +1,27 @@
+name: Process Download
+on:
+  repository_dispatch:
+    types: [update_downloads, delete_entry]
+
+jobs:
+  process-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Modify HTML
+        run: |
+          if [ "${{ github.event.client_payload.action }}" == "delete" ]; then
+            sed -i "/${{ github.event.client_payload.counterName }}/,/<\/div>/d" ${{ github.event.client_payload.targetPage }}
+          else
+            sed -i "/<!-- Start new entries -->/a \
+            <div class='download-item'>...\n" ${{ github.event.client_payload.targetPage }}
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "${{ github.event.client_payload.action == 'delete' ? 'Delete' : 'Add' }} download entry"
+          git push
