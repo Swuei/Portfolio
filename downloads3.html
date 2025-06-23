@@ -22,6 +22,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="downloads.js"></script>
+    <script src="admin.js"></script>
+    
 </head>
 <body>
     <div class="top-bar">
@@ -152,6 +154,67 @@
             </div>
         </div>
     </section>
+
+    <button class="admin-btn" id="adminBtn">
+<i class="fas fa-plus"></i>
+</button>
+<div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+        <span class="admin-close-btn">×</span>
+        <h3>Admin Panel</h3>
+        <div id="loginForm">
+            <div class="admin-form-group">
+                <label for="githubToken">GitHub Token:</label>
+                <input id="githubToken" placeholder="Enter your GitHub token" type="password" />
+            </div>
+            <div class="admin-form-group">
+                <label for="tokenExpiry">Token Expiry:</label>
+                <input id="tokenExpiry" placeholder="YYYY-MM-DD HH:MM" type="text" />
+            </div>
+            <button class="admin-submit-btn" id="loginBtn">Login</button>
+        </div>
+        <div id="entryForm" style="display: none;">
+            <div class="admin-form-group">
+                <label for="entryName">Model Name:</label>
+                <input id="entryName" placeholder="Fish Tank [1] (16x) | Animated" type="text" />
+            </div>
+            <div class="admin-form-group">
+                <label for="sketchfabLink">Sketchfab Link:</label>
+                <input id="sketchfabLink" placeholder="https://sketchfab.com/3d-models/..." type="url" />
+            </div>
+            <div class="admin-form-group">
+                <label for="mediafireLink">Mediafire Link:</label>
+                <input id="mediafireLink" placeholder="https://www.mediafire.com/file/..." type="url" />
+            </div>
+            <div class="admin-form-group">
+                <label for="counterName">Counter Name:</label>
+                <input id="counterName" placeholder="fish-tank-counter" type="text" />
+            </div>
+            <div class="admin-form-group">
+                <label for="fileSize">File Size:</label>
+                <input id="fileSize" placeholder="376.31KB" type="text" />
+            </div>
+            <div class="admin-form-group">
+                <label for="modelCount">Model Count:</label>
+                <input id="modelCount" placeholder="1 Model &amp; 1 Texture" type="text" />
+            </div>
+            <div class="admin-form-group">
+                <label for="uploadDate">Upload Date:</label>
+                <input id="uploadDate" placeholder="06/01/2025" type="text" />
+            </div>
+            <div class="admin-form-group">
+                <label for="targetPage">Target Page:</label>
+                <select id="targetPage">
+<option value="downloads.html">Page 1</option>
+<option value="downloads2.html">Page 2</option>
+<option value="downloads3.html">Page 3</option>
+</select>
+            </div>
+            <button class="admin-submit-btn" id="submitEntryBtn">Add Entry</button>
+        </div>
+    </div>
+</div>
+<div class="status-notification" id="statusNotification"></div>
 
     <section id="privacy" class="privacy-section">
         <div class="privacy-container">
