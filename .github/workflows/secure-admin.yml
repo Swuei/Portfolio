@@ -4,12 +4,23 @@ on:
   schedule:
     - cron: '0 * * * *'
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   generate-token:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      actions: write
+      
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Generate token
         id: generate
         run: |
