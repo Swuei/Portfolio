@@ -12,12 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginBtn = document.getElementById('loginBtn');
     const submitEntryBtn = document.getElementById('submitEntryBtn');
     const statusNotification = document.getElementById('statusNotification');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     if (adminBtn && adminModal) {
         adminBtn.addEventListener('click', function (e) {
             e.preventDefault();
             adminModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            
+            checkAuthStatus();
         });
 
         closeBtn.addEventListener('click', function () {
@@ -33,11 +36,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (localStorage.getItem('adminSecret')) {
-        loginForm.style.display = 'none';
-        entryForm.style.display = 'block';
-        if (adminBtn) adminBtn.style.display = 'flex';
+    function checkAuthStatus() {
+        const token = localStorage.getItem('adminSecret');
+        const expiry = localStorage.getItem('tokenExpiry');
+        
+        if (token && expiry && new Date(expiry) > new Date()) {
+            loginForm.style.display = 'none';
+            entryForm.style.display = 'block';
+            if (adminBtn) adminBtn.style.display = 'flex';
+        } else {
+            localStorage.removeItem('adminSecret');
+            localStorage.removeItem('tokenExpiry');
+            loginForm.style.display = 'block';
+            entryForm.style.display = 'none';
+        }
     }
+
+    checkAuthStatus();
 
     if (loginBtn) {
         loginBtn.addEventListener('click', async () => {
@@ -49,8 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if (!/^[a-f0-9]{40}$/.test(token)) {
-                showNotification('Invalid token format', 'error');
+            if (!/^[a-zA-Z0-9_]{40}$/.test(token)) {
+                showNotification('Invalid token format - must be 40-character GitHub token', 'error');
                 return;
             }
 
@@ -66,9 +81,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             localStorage.setItem('adminSecret', token);
-            loginForm.style.display = 'none';
-            entryForm.style.display = 'block';
+            localStorage.setItem('tokenExpiry', expiry);
+            
+            checkAuthStatus();
             showNotification('Successfully logged in', 'success');
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('adminSecret');
+            localStorage.removeItem('tokenExpiry');
+            checkAuthStatus();
+            showNotification('Successfully logged out', 'success');
         });
     }
 
