@@ -49,6 +49,6 @@ jobs:
               workflow_id: 'success-notification.yml',
               ref: 'main',
               inputs: {
-                email: 'your-email@example.com'  # Replace with your email
+                secret_email: '${{ secrets.NOTIFICATION_EMAIL }}'
               }
             })
