@@ -1,27 +1,30 @@
-name: Process Download
+name: Process Download Entry
 on:
   repository_dispatch:
-    types: [update_downloads, delete_entry]
+    types: [update_downloads]
 
 jobs:
-  process-changes:
+  process-entry:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      - name: Modify HTML
+      - name: Update HTML
         run: |
-          if [ "${{ github.event.client_payload.action }}" == "delete" ]; then
-            sed -i "/${{ github.event.client_payload.counterName }}/,/<\/div>/d" ${{ github.event.client_payload.targetPage }}
-          else
-            sed -i "/<!-- Start new entries -->/a \
-            <div class='download-item'>...\n" ${{ github.event.client_payload.targetPage }}
-          fi
+          sed -i "/<!-- Self Note: When adding new products start from here -->/a \
+          <div class='download-item'>\n\
+            <div class='download-item-header'>\n\
+              <h4>${{ github.event.client_payload.name }}</h4>\n\
+              <span class='download-item-count' data-counter='${{ github.event.client_payload.counterName }}'>\n\
+                <i class='fas fa-download'></i> <span>0</span>\n\
+              </span>\n\
+            </div>\n\
+            <!-- Rest of your template -->" ${{ github.event.client_payload.targetPage }}
 
       - name: Commit changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add .
-          git commit -m "${{ github.event.client_payload.action == 'delete' ? 'Delete' : 'Add' }} download entry"
+          git commit -m "Add new download entry"
           git push
