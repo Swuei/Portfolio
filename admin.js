@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Admin panel initialized successfully");
 
     const GITHUB_REPO = 'Swuei/Portfolio';
+    const AUTH_ENDPOINT = `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/token-validation.yml/dispatches`;
     const DISCORD_WEBHOOK_URL = '';
 
     const adminBtn = document.getElementById('adminBtn');
