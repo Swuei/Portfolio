@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     console.log("Admin panel initialized successfully");
 
     const GITHUB_REPO = 'Swuei/Portfolio';
@@ -12,14 +12,9 @@
     const loginBtn = document.getElementById('loginBtn');
     const submitEntryBtn = document.getElementById('submitEntryBtn');
     const statusNotification = document.getElementById('statusNotification');
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-
-    if (!adminBtn) console.error("Admin button not found - check HTML ID");
-    if (!adminModal) console.error("Admin modal not found - check HTML ID");
 
     if (adminBtn && adminModal) {
         adminBtn.addEventListener('click', function (e) {
-            console.log("Admin button clicked");
             e.preventDefault();
             adminModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -39,14 +34,12 @@
     }
 
     if (localStorage.getItem('adminSecret')) {
-        console.log("Admin session detected");
+        loginForm.style.display = 'none';
+        entryForm.style.display = 'block';
         if (adminBtn) adminBtn.style.display = 'flex';
-        document.querySelectorAll('.admin-controls').forEach(el => {
-            el.style.display = 'block';
-        });
     }
 
-    if (loginBtn && loginForm && entryForm) {
+    if (loginBtn) {
         loginBtn.addEventListener('click', async () => {
             const token = document.getElementById('githubToken').value.trim();
             const expiry = document.getElementById('tokenExpiry').value.trim();
@@ -56,18 +49,18 @@
                 return;
             }
 
-            if (!/^[a-f0-9]{32}$/.test(token)) {
-                showNotification('Invalid token format - must be 32-character hex', 'error');
+            if (!/^[a-f0-9]{40}$/.test(token)) {
+                showNotification('Invalid token format', 'error');
                 return;
             }
 
             const expiryDate = new Date(expiry);
             if (isNaN(expiryDate.getTime())) {
-                showNotification('Invalid expiry format - use YYYY-MM-DDTHH:MM:SSZ', 'error');
+                showNotification('Invalid expiry format - use YYYY-MM-DD HH:MM', 'error');
                 return;
             }
 
-            if (expiryDate < new Date(Date.now() + 120000)) {
+            if (expiryDate < new Date()) {
                 showNotification('Token has expired', 'error');
                 return;
             }
@@ -75,7 +68,6 @@
             localStorage.setItem('adminSecret', token);
             loginForm.style.display = 'none';
             entryForm.style.display = 'block';
-            if (adminBtn) adminBtn.style.display = 'flex';
             showNotification('Successfully logged in', 'success');
         });
     }
@@ -93,7 +85,7 @@
                 targetPage: document.getElementById('targetPage').value
             };
 
-            if (!formData.name || !formData.sketchfabLink || !formData.mediafireLink || !formData.counterName) {
+            if (!formData.name || !formData.mediafireLink || !formData.counterName) {
                 showNotification('Please fill all required fields', 'error');
                 return;
             }
@@ -103,7 +95,8 @@
                     method: 'POST',
                     headers: {
                         'Authorization': `token ${localStorage.getItem('adminSecret')}`,
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         event_type: 'update_downloads',
@@ -115,7 +108,9 @@
                     showNotification('Entry submitted for processing!', 'success');
                     document.getElementById('entryForm').reset();
                 } else {
-                    showNotification('Failed to submit entry', 'error');
+                    const errorData = await response.json();
+                    showNotification(`Failed to submit entry: ${errorData.message || 'Unknown error'}`, 'error');
+                    console.error('Submission error details:', errorData);
                 }
             } catch (error) {
                 showNotification('Network error - check console', 'error');
@@ -124,78 +119,12 @@
         });
     }
 
-    deleteButtons.forEach(button => {
-        const counterName = button.getAttribute('data-counter');
-        button.addEventListener('click', () => deleteEntry(button, counterName));
-    });
-
-    async function deleteEntry(button, counterName) {
-        if (!confirm('Permanently delete this entry?')) return;
-
-        const item = button.closest('.download-item');
-        const token = localStorage.getItem('adminSecret');
-        const page = window.location.pathname.split('/').pop();
-
-        try {
-            const response = await fetch(page);
-            const htmlContent = await response.text();
-            const entryStart = htmlContent.indexOf(`data-counter="${counterName}"`);
-            const entryEnd = htmlContent.indexOf('</div>', htmlContent.indexOf('</div>', entryStart) + 1);
-            const updatedHtml = htmlContent.slice(0, entryStart) + htmlContent.slice(entryEnd + 6);
-            const success = await updateGitHubFile(page, updatedHtml, token);
-
-            if (success) {
-                item.remove();
-                showNotification('Entry deleted!', 'success');
-            } else {
-                showNotification('Deletion failed', 'error');
-            }
-        } catch (error) {
-            showNotification('Error: Check console', 'error');
-            console.error('Deletion error:', error);
-        }
-    }
-
-    async function updateGitHubFile(path, content, token) {
-        try {
-            const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            const fileData = await getResponse.json();
-
-            const encoder = new TextEncoder();
-            const encoded = encoder.encode(content);
-            const base64Content = btoa(String.fromCharCode(...new Uint8Array(encoded)));
-
-            const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: `Updated ${path}`,
-                    content: base64Content,
-                    sha: fileData.sha
-                })
-            });
-
-            return updateResponse.ok;
-        } catch (error) {
-            console.error('File update error:', error);
-            return false;
-        }
-    }
-
     function showNotification(message, type = 'info') {
         if (!statusNotification) return;
         statusNotification.textContent = message;
-        statusNotification.className = `notification ${type}`;
+        statusNotification.className = `status-notification ${type}`;
         statusNotification.style.display = 'block';
+
         setTimeout(() => {
             statusNotification.style.display = 'none';
         }, 5000);
