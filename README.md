@@ -18,6 +18,7 @@ I create **free, high-quality 3D models** for Minecraft servers and resource pac
 ![Blockbench](https://img.shields.io/badge/-Blockbench-3D7AB1?style=flat&logo=blockbench&logoColor=white)
 ![Sketchfab](https://img.shields.io/badge/-Sketchfab-1CAAD9?style=flat&logo=sketchfab&logoColor=white)
 ![Pixel Art](https://img.shields.io/badge/-Pixel_Art-FF66FF?style=flat)
+![Aseprite](https://img.shields.io/badge/-Aseprite-7D929E?style=flat&logo=aseprite&logoColor=white)
 ![Animation](https://img.shields.io/badge/-Animation-00CCFF?style=flat)
 
 ## 🌐 Connect With Me
