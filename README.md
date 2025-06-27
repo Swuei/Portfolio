@@ -24,16 +24,16 @@ I create **free, high-quality 3D models** for Minecraft servers and resource pac
 
 [![Discord](https://img.shields.io/badge/Discord-Swuei-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/users/817968354979610624)
 [![Sketchfab](https://img.shields.io/badge/Sketchfab-Portfolio-1CAAD9?style=for-the-badge&logo=sketchfab&logoColor=white)](https://sketchfab.com/Swuei)
-[![Website](https://img.shields.io/badge/Website-Downloads-00AA00?style=for-the-badge)](https://swuei.github.io/downloads.html)
+[![Website](https://img.shields.io/badge/Website-Website-00AA00?style=for-the-badge)](https://swuei.github.io/index.html)
 
 ## 📦 Featured Models
 
 | Model | Preview | Download |
 |-------|---------|----------|
-| Dungeon Door (32x) | [Sketchfab](https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
-| Crate Variety Pack | [Sketchfab](https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
-| Warden Plushie | [Sketchfab](https://sketchfab.com/models/b1fe9168a461423d969872b57314414a) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
+| Dungeon Door (32x) | [Sketchfab](https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac) | [Download](https://swuei.github.io/Portfolio/downloads.html) |
+| Crate Variety Pack | [Sketchfab](https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691) | [Download](https://swuei.github.io/Portfolio/downloads.html) |
+| Warden Plushie | [Sketchfab](https://sketchfab.com/models/b1fe9168a461423d969872b57314414a) | [Download](https://swuei.github.io/Portfolio/downloads.html) |
 
-> "Creating professional Minecraft 3D models - completely free for the community."
+> "Find more free content on my website above :)"
 
 📜 **Note:** All rights to my models are reserved. You may not sell or redistribute without permission.
