@@ -30,9 +30,9 @@ I create **free, high-quality 3D models** for Minecraft servers and resource pac
 
 | Model | Preview | Download |
 |-------|---------|----------|
-| Dungeon Door (32x) | [Sketchfab](https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac) | [Mediafire](https://www.mediafire.com/file/g42qty34iupq8xr/Dungeon_Door.zip/file) |
-| Crate Variety Pack | [Sketchfab](https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691) | [Mediafire](https://www.mediafire.com/file/frwv10f1x7lvxy9/Crates_Pack.zip/file) |
-| Warden Plushie | [Sketchfab](https://sketchfab.com/models/b1fe9168a461423d969872b57314414a) | [Mediafire](https://www.mediafire.com/file/dy76vpmoti9n1z7/Warden_Plushie.zip/file) |
+| Dungeon Door (32x) | [Sketchfab](https://sketchfab.com/models/cc121d18e1954fd8adf45332f74461ac) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
+| Crate Variety Pack | [Sketchfab](https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
+| Warden Plushie | [Sketchfab](https://sketchfab.com/models/b1fe9168a461423d969872b57314414a) | [Mediafire](https://swuei.github.io/Portfolio/downloads.html) |
 
 > "Creating professional Minecraft 3D models - completely free for the community."
 
