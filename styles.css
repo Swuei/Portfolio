@@ -1415,28 +1415,32 @@ footer {
     color: white;
 }
 .shaking-bell {
-    color: #00ffd5; 
-    margin-right: 10px;
+    color: #00ffd5;
+    margin-right: 8px;
     animation: shakeBell 3s infinite ease-in-out;
     transform-origin: center top;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 @keyframes shakeBell {
     0%, 90%, 100% {
         transform: rotate(0deg);
     }
+
     92% {
-        transform: rotate(10deg);
-    }
-    94% {
-        transform: rotate(-10deg);
-    }
-    96% {
         transform: rotate(8deg);
     }
-    98% {
+
+    94% {
         transform: rotate(-8deg);
+    }
+
+    96% {
+        transform: rotate(6deg);
+    }
+
+    98% {
+        transform: rotate(-6deg);
     }
 }
 
@@ -1444,11 +1448,18 @@ footer {
     background: rgba(0, 255, 213, 0.05);
     border: 1px solid rgba(0, 255, 213, 0.2);
     border-radius: 8px;
-    padding: 0.8rem 1.2rem;
-    margin: 1.5rem 0;
+    padding: 0.8rem;
+    margin: 1.2rem 0;
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .highlighted-pagination {
+        padding: 0.6rem;
+        margin: 1rem 0;
+    }
 }
 
 .highlighted-pagination:hover {
@@ -1459,24 +1470,81 @@ footer {
 .pageflipper-notice {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin-right: auto;
     color: #00ffd5;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .pageflipper-notice {
+        font-size: 0.85rem;
+        gap: 6px;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
 }
 
 .animated-arrow {
     animation: bounceRight 0.8s infinite;
     color: #00ffd5;
-    font-size: 1rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .animated-arrow {
+        font-size: 0.8rem;
+    }
 }
 
 @keyframes bounceRight {
     0%, 100% {
         transform: translateX(0);
     }
+
     50% {
-        transform: translateX(5px);
+        transform: translateX(4px);
+    }
+}
+
+@media (max-width: 480px) {
+    .shaking-bell {
+        font-size: 0.9em;
+        margin-right: 6px;
+        animation: shakeBellMobile 3s infinite ease-in-out;
+    }
+
+    @keyframes shakeBellMobile {
+        0%, 90%, 100% {
+            transform: rotate(0deg);
+        }
+
+        92% {
+            transform: rotate(5deg);
+        }
+
+        94% {
+            transform: rotate(-5deg);
+        }
+
+        96% {
+            transform: rotate(4deg);
+        }
+
+        98% {
+            transform: rotate(-4deg);
+        }
+    }
+
+    .highlighted-pagination {
+        padding: 0.5rem;
+    }
+
+    .pageflipper-notice span {
+        font-size: 0.8rem;
     }
 }
