@@ -1494,14 +1494,14 @@ footer {
 }
 
 .animated-arrow {
-    animation: bounceRight 0.8s infinite;
+    animation: bounceDown 0.8s infinite;
     color: #00ffd5;
     font-size: 1.2rem;
     margin-left: 8px;
     transition: all 0.3s ease;
 }
 
-@keyframes bounceRight {
+@keyframes bounceDown {
     0%, 100% {
         transform: translateY(0);
     }
