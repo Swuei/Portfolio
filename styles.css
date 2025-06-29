@@ -1414,4 +1414,69 @@ footer {
     background-color: #4caf50;
     color: white;
 }
+.shaking-bell {
+    color: #00ffd5; 
+    margin-right: 10px;
+    animation: shakeBell 3s infinite ease-in-out;
+    transform-origin: center top;
+    font-size: 1.1em;
+}
 
+@keyframes shakeBell {
+    0%, 90%, 100% {
+        transform: rotate(0deg);
+    }
+    92% {
+        transform: rotate(10deg);
+    }
+    94% {
+        transform: rotate(-10deg);
+    }
+    96% {
+        transform: rotate(8deg);
+    }
+    98% {
+        transform: rotate(-8deg);
+    }
+}
+
+.highlighted-pagination {
+    background: rgba(0, 255, 213, 0.05);
+    border: 1px solid rgba(0, 255, 213, 0.2);
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.highlighted-pagination:hover {
+    background: rgba(0, 255, 213, 0.1);
+    border-color: rgba(0, 255, 213, 0.4);
+}
+
+.pageflipper-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    color: #00ffd5;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.animated-arrow {
+    animation: bounceRight 0.8s infinite;
+    color: #00ffd5;
+    font-size: 1rem;
+}
+
+@keyframes bounceRight {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+}
