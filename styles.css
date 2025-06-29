@@ -1419,7 +1419,7 @@ footer {
     margin-right: 8px;
     animation: shakeBell 3s infinite ease-in-out;
     transform-origin: center top;
-    font-size: 1em;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
 }
 
 @keyframes shakeBell {
@@ -1453,98 +1453,107 @@ footer {
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .highlighted-pagination {
-        padding: 0.6rem;
-        margin: 1rem 0;
-    }
-}
-
-.highlighted-pagination:hover {
-    background: rgba(0, 255, 213, 0.1);
-    border-color: rgba(0, 255, 213, 0.4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .pageflipper-notice {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-right: auto;
     color: #00ffd5;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0.5rem;
     flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
-    .pageflipper-notice {
-        font-size: 0.85rem;
-        gap: 6px;
-        margin-bottom: 0.5rem;
-        width: 100%;
-        justify-content: center;
-        text-align: center;
-    }
+.download-pageflipper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    width: 100%;
+}
+
+.page-link, .arrow-btn {
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    padding: 0.4rem 0.8rem;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.page-divider {
+    display: none;
 }
 
 .animated-arrow {
-    animation: bounceRight 0.8s infinite;
+    animation: bounceDown 0.8s infinite;
     color: #00ffd5;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+@keyframes bounceDown {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(5px);
+    }
 }
 
 @media (max-width: 768px) {
     .animated-arrow {
-        font-size: 0.8rem;
-    }
-}
-
-@keyframes bounceRight {
-    0%, 100% {
-        transform: translateX(0);
-    }
-
-    50% {
-        transform: translateX(4px);
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .shaking-bell {
-        font-size: 0.9em;
-        margin-right: 6px;
-        animation: shakeBellMobile 3s infinite ease-in-out;
+    .animated-arrow {
+        font-size: 0.9rem;
+        margin-left: 5px;
     }
 
-    @keyframes shakeBellMobile {
-        0%, 90%, 100% {
-            transform: rotate(0deg);
-        }
-
-        92% {
-            transform: rotate(5deg);
-        }
-
-        94% {
-            transform: rotate(-5deg);
-        }
-
-        96% {
-            transform: rotate(4deg);
-        }
-
-        98% {
-            transform: rotate(-4deg);
-        }
+    .pageflipper-notice .animated-arrow {
+        display: none;
     }
+}
 
+@media (max-width: 480px) {
     .highlighted-pagination {
-        padding: 0.5rem;
+        padding: 0.6rem 0.4rem;
+        gap: 0.3rem;
     }
 
-    .pageflipper-notice span {
-        font-size: 0.8rem;
+    .pageflipper-notice {
+        margin-bottom: 0.3rem;
+    }
+
+    .page-link, .arrow-btn {
+        padding: 0.3rem 0.6rem;
+    }
+
+    .shaking-bell {
+        margin-right: 5px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .page-divider {
+        display: inline;
+    }
+
+    .download-pageflipper {
+        gap: 0.5rem;
     }
 }
