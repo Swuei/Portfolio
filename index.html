@@ -243,6 +243,70 @@
         </div>
     </section>
 
+    <section id="request" class="request-section" data-aos="fade-up">
+        <h2 class="section-title">Request a Model</h2>
+        <p class="subtitle">Fill out the form below to request a custom 3D model. I'll review your request and get back to you via Discord if I choose to fulfil your request.</p>
+
+        <form id="modelRequestForm" class="request-form">
+            <div class="form-group">
+                <label for="discord">Discord Username</label>
+                <input type="text" id="discord" name="discord" required placeholder="Your Discord username (e.g. Swuei#1234)">
+            </div>
+
+            <div class="form-group">
+                <label for="topic">Model Topic</label>
+                <input type="text" id="topic" name="topic" required placeholder="What kind of model do you need?">
+            </div>
+
+            <div class="form-group">
+                <label for="details">Details</label>
+                <textarea id="details" name="details" required placeholder="Describe your model in detail..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="usedFor">Used For</label>
+                <select id="usedFor" name="usedFor" required>
+                    <option value="" disabled selected>Select what this model will be used for</option>
+                    <option value="Minecraft Server">Minecraft Server</option>
+                    <option value="Minecraft Mod">Minecraft Mod (I don't do models for mods sorry!)</option>
+                    <option value="Personal Project">Personal Project</option>
+                    <option value="Content Creation">Content Creation</option>
+                    <option value="Commercial Use">Commercial Use</option>
+                    <option value="Other">Other (specify in details)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="textureSize">Texture Size</label>
+                <select id="textureSize" name="textureSize" required>
+                    <option value="" disabled selected>Select texture resolution</option>
+                    <option value="16x">16x (Minecraft default)</option>
+                    <option value="32x">32x (HD)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="referenceImage">Reference Image URL</label>
+                <input type="url" id="referenceImage" name="referenceImage"
+                       required
+                       placeholder="https://ibb.co/... or https://i.ibb.co/...">
+                <small>Must be an ImgBB.com URL (e.g., https://ibb.co/abc123 or https://i.ibb.co/xyz/image.jpg)</small>
+                <div class="file-requirements">
+                    <i class="fas fa-info-circle"></i> Required - Must be from imgbb.com
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <p><small>By submitting this form, you agree to my <a href="downloads.html#privacy" target="_blank">privacy policy</a>.</small></p>
+                <button type="submit" class="btn submit-btn">
+                    <i class="fas fa-paper-plane"></i> Send Request
+                </button>
+            </div>
+        </form>
+
+        <div id="formStatus" class="form-status"></div>
+    </section>
+
     <div class="modal" id="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeModal">&times;</span>
