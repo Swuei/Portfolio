@@ -1,4 +1,4 @@
-name: Deploy with ImgBB
+name: Deploy with Secrets
 
 on:
   push:
@@ -10,11 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Inject ImgBB Key
+      - name: Inject Secrets
         run: |
-          sed -i "s|process.env.IMGBB_API_KEY|'${{ secrets.IMGBB_API_KEY }}'|g" js/imgbb.js
+          sed -i "s|YOUR_IMGBB_API_KEY|${{ secrets.IMGBB_API_KEY }}|g" index.js
+          sed -i "s|YOUR_DISCORD_WEBHOOK_URL|${{ secrets.DISCORD_WEBHOOK }}|g" index.js
           
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
