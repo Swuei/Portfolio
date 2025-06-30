@@ -1,0 +1,21 @@
+name: Deploy with ImgBB
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Inject ImgBB Key
+        run: |
+          sed -i "s|process.env.IMGBB_API_KEY|'${{ secrets.IMGBB_API_KEY }}'|g" js/imgbb.js
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
