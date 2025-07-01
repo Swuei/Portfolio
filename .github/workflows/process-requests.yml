@@ -19,43 +19,43 @@ jobs:
         uses: tj-actions/changed-files@v41
 
       - name: Process submissions
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "Processing $file"
-            
-            CONTENT=$(jq -r '.content' "$file" | base64 -d)
-            
-            DISCORD=$(echo "$CONTENT" | jq -r '.discord')
-            TOPIC=$(echo "$CONTENT" | jq -r '.topic')
-            DETAILS=$(echo "$CONTENT" | jq -r '.details')
-            USED_FOR=$(echo "$CONTENT" | jq -r '.usedFor')
-            TEXTURE_SIZE=$(echo "$CONTENT" | jq -r '.textureSize')
-            IMAGE_URL=$(echo "$CONTENT" | jq -r '.referenceImage')
+  if: steps.changed-files.outputs.any_changed == 'true'
+  run: |
+    for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+      echo "Processing $file"
+      
+      CONTENT=$(jq -r '.content' "$file" | base64 -d)
 
-            curl -X POST \
-              "${{ secrets.DISCORD_WEBHOOK }}" \
-              -H "Content-Type: application/json" \
-              -d @- <<EOF
-            {
-              "embeds": [{
-                "title": "📦 New Model Request",
-                "color": 5814783,
-                "fields": [
-                  {"name": "👤 Discord", "value": "$DISCORD", "inline": true},
-                  {"name": "🎯 Topic", "value": "$TOPIC", "inline": true},
-                  {"name": "🖼️ Texture Size", "value": "$TEXTURE_SIZE", "inline": true},
-                  {"name": "🏷️ Used For", "value": "$USED_FOR", "inline": true},
-                  {"name": "📝 Details", "value": "$DETAILS"},
-                  {"name": "🖼️ Reference", "value": "[View Image]($IMAGE_URL)"}
-                ],
-                "footer": {"text": "Submitted via GitHub Form"}
-              }]
-            }
-            EOF
+      DISCORD=$(echo "$CONTENT" | jq -r '.discord')
+      TOPIC=$(echo "$CONTENT" | jq -r '.topic')
+      DETAILS=$(echo "$CONTENT" | jq -r '.details')
+      USED_FOR=$(echo "$CONTENT" | jq -r '.usedFor')
+      TEXTURE_SIZE=$(echo "$CONTENT" | jq -r '.textureSize')
+      IMAGE_URL=$(echo "$CONTENT" | jq -r '.referenceImage')
 
-            git rm "$file"
-          done
+      export DISCORD TOPIC DETAILS USED_FOR TEXTURE_SIZE IMAGE_URL
+
+      cat <<EOF | envsubst | curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" -H "Content-Type: application/json" -d @-
+{
+  "embeds": [{
+    "title": "📦 New Model Request",
+    "color": 5814783,
+    "fields": [
+      {"name": "👤 Discord", "value": "$DISCORD", "inline": true},
+      {"name": "🎯 Topic", "value": "$TOPIC", "inline": true},
+      {"name": "🖼️ Texture Size", "value": "$TEXTURE_SIZE", "inline": true},
+      {"name": "🏷️ Used For", "value": "$USED_FOR", "inline": true},
+      {"name": "📝 Details", "value": "$DETAILS"},
+      {"name": "🖼️ Reference", "value": "[View Image]($IMAGE_URL)"}
+    ],
+    "footer": {"text": "Submitted via GitHub Form"}
+  }]
+}
+EOF
+
+      git rm "$file"
+    done
+
 
           if [ -n "$(git status --porcelain)" ]; then
             git config --global user.name "GitHub Actions"
