@@ -11,25 +11,27 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get new submissions
+      - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v41
-        with:
-          files: 'form-submissions/*.json'
 
-      - name: Process each submission
+      - name: Process submissions
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "Processing $file"
             
-            # Extract form data
-            DATA=$(jq -r '@base64d' "$file" | jq -c .)
-            DISCORD=$(echo "$DATA" | jq -r '.discord')
-            TOPIC=$(echo "$DATA" | jq -r '.topic')
-            DETAILS=$(echo "$DATA" | jq -r '.details')
-            IMAGE_URL=$(echo "$DATA" | jq -r '.referenceImage')
+            CONTENT=$(jq -r '.content' "$file" | base64 -d)
+            
+            DISCORD=$(echo "$CONTENT" | jq -r '.discord')
+            TOPIC=$(echo "$CONTENT" | jq -r '.topic')
+            DETAILS=$(echo "$CONTENT" | jq -r '.details')
+            USED_FOR=$(echo "$CONTENT" | jq -r '.usedFor')
+            TEXTURE_SIZE=$(echo "$CONTENT" | jq -r '.textureSize')
+            IMAGE_URL=$(echo "$CONTENT" | jq -r '.referenceImage')
 
             curl -X POST \
               "${{ secrets.DISCORD_WEBHOOK }}" \
@@ -40,12 +42,14 @@ jobs:
                 "title": "📦 New Model Request",
                 "color": 5814783,
                 "fields": [
-                  { "name": "👤 Discord", "value": "$DISCORD", "inline": true },
-                  { "name": "🎯 Topic", "value": "$TOPIC", "inline": true },
-                  { "name": "📝 Details", "value": "$DETAILS" },
-                  { "name": "🖼️ Reference", "value": "[View Image]($IMAGE_URL)" }
+                  {"name": "👤 Discord", "value": "$DISCORD", "inline": true},
+                  {"name": "🎯 Topic", "value": "$TOPIC", "inline": true},
+                  {"name": "🖼️ Texture Size", "value": "$TEXTURE_SIZE", "inline": true},
+                  {"name": "🏷️ Used For", "value": "$USED_FOR", "inline": true},
+                  {"name": "📝 Details", "value": "$DETAILS"},
+                  {"name": "🖼️ Reference", "value": "[View Image]($IMAGE_URL)"}
                 ],
-                "footer": { "text": "Submitted via GitHub Form" }
+                "footer": {"text": "Submitted via GitHub Form"}
               }]
             }
             EOF
@@ -53,8 +57,9 @@ jobs:
             git rm "$file"
           done
 
-          # Commit changes
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git commit -m "Remove processed submissions" || echo "No changes to commit"
-          git push
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
+            git commit -m "Remove processed submissions"
+            git push
+          fi
