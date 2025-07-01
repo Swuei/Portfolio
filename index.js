@@ -127,14 +127,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
                 if (!pathHasExtension) {
-                    https://ibb.co/YFj1nyP7
                     console.log('Assuming URL points to an image page');
                 }
 
                 const formData = new FormData(modelRequestForm);
                 const data = Object.fromEntries(formData.entries());
 
-                const webhookUrl = '__DISCORD_WEBHOOK__';
+                const githubToken = '__GITHUB_PAT__';
+                const repoOwner = 'Swuei';
+                const repoName = 'Portfolio';
 
                 const embed = {
                     title: '📦 New Model Request',
@@ -152,18 +153,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     footer: { text: 'New model request submitted' }
                 };
 
-                const response = await fetch(webhookUrl, {
+                const issueBody = `
+**Embed Payload**
+\`\`\`json
+${JSON.stringify(embed, null, 2)}
+\`\`\`
+            `;
+
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github+json'
+                    },
                     body: JSON.stringify({
-                        username: 'Model Request Bot',
-                        avatar_url: 'https://i.ibb.co/MDhCjGRL/eye-block.png',
-                        embeds: [embed],
-                        content: `📬 New model request from ${data.discord}`
+                        title: `New model request from ${data.discord}`,
+                        body: issueBody
                     })
                 });
 
-                if (!response.ok) throw new Error('Failed to send to Discord');
+                if (!response.ok) throw new Error('Failed to create GitHub Issue');
 
                 showSuccess('Request sent successfully! I\'ll contact you soon.');
                 modelRequestForm.reset();
@@ -175,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
 
     function showError(message) {
         formStatus.textContent = message;
