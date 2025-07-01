@@ -1,0 +1,21 @@
+name: Send Discord Notification on New Request
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse Issue & Send to Discord
+        run: |
+          WEBHOOK="${{ secrets.DISCORD_WEBHOOK }}"
+          EMBED_JSON=$(echo "${{ github.event.issue.body }}" | sed -n '/```json/,/```/p' | sed '1d;$d')
+
+          curl -X POST -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg content "📬 ${GITHUB_ACTOR} submitted a request" \
+              --argjson embed "$EMBED_JSON" \
+              '{username: "Model Request Bot", embeds: [$embed], content: $content}')" \
+            "$WEBHOOK"
