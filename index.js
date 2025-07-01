@@ -95,16 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (modelRequestForm) {
-        if (localStorage.getItem('hasSubmittedModelRequest')) {
-            modelRequestForm.querySelector('.submit-btn').disabled = true;
-            showError('You have already submitted a request.');
-        }
-
         modelRequestForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (localStorage.getItem('hasSubmittedModelRequest')) {
-                showError('You can only submit one request.');
+            if (document.cookie.includes("modelSubmitted=true") || localStorage.getItem("modelSubmitted")) {
+                showError("You've already submitted a request.");
                 return;
             }
 
@@ -134,40 +129,38 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Failed to submit request');
                 }
 
-                localStorage.setItem('hasSubmittedModelRequest', 'true');
+                document.cookie = "modelSubmitted=true; max-age=" + (60 * 60 * 24 * 30) + "; path=/";
+                localStorage.setItem("modelSubmitted", "true");
 
                 showSuccess("Request submitted successfully! I'll contact you soon.");
                 modelRequestForm.reset();
-
             } catch (error) {
                 console.error('Error:', error);
                 showError(error.message || 'Error submitting request. Please try again.');
             } finally {
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
-                submitBtn.disabled = true;
+                submitBtn.disabled = false;
             }
         });
     }
+        function showError(message) {
+            formStatus.textContent = message;
+            formStatus.className = 'form-status error';
+            formStatus.style.display = 'block';
+        }
 
+        function showSuccess(message) {
+            formStatus.textContent = message;
+            formStatus.className = 'form-status success';
+            formStatus.style.display = 'block';
+        }
 
-    function showError(message) {
-        formStatus.textContent = message;
-        formStatus.className = 'form-status error';
-        formStatus.style.display = 'block';
-    }
-
-    function showSuccess(message) {
-        formStatus.textContent = message;
-        formStatus.className = 'form-status success';
-        formStatus.style.display = 'block';
-    }
-
-    function resetSubmitButton() {
-        const submitBtn = document.querySelector('.submit-btn');
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
-        submitBtn.disabled = false;
-        setTimeout(() => {
-            formStatus.style.display = 'none';
-        }, 5000);
-    }
-});
+        function resetSubmitButton() {
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+            submitBtn.disabled = false;
+            setTimeout(() => {
+                formStatus.style.display = 'none';
+            }, 5000);
+        }
+    });
