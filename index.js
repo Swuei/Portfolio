@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formData = new FormData(modelRequestForm);
                 const data = Object.fromEntries(formData.entries());
 
-                const webhookUrl = 'https://discord.com/api/webhooks/1389255048344895608/XggXNvL46jrNsv6ktOr3Y3wPSp6LsL6VpfsB2NN9zeNZas6MrBJDBaNXpPoBcMxD3yuj';
+                const webhookUrl = '__DISCORD_WEBHOOK__';
 
                 const embed = {
                     title: '📦 New Model Request',
