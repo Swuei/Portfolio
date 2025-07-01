@@ -247,7 +247,7 @@
         <h2 class="section-title">Request a Model</h2>
         <p class="subtitle">Fill out the form below to request a custom 3D model. I'll review your request and get back to you via Discord if I choose to fulfil your request.</p>
 
-        <form id="modelRequestForm" class="request-form">
+        <form id="modelRequestForm" class="request-form" action="https://formspree.io/f/mnnvwowy" method="POST">
             <div class="form-group">
                 <label for="discord">Discord Username</label>
                 <input type="text" id="discord" name="discord" required placeholder="Your Discord username (e.g. Swuei#1234)">
@@ -289,6 +289,7 @@
                 <label for="referenceImage">Reference Image URL</label>
                 <input type="url" id="referenceImage" name="referenceImage"
                        required
+                       pattern="https:\/\/(i\.ibb\.co|ibb\.co)\/.*"
                        placeholder="https://ibb.co/... or https://i.ibb.co/...">
                 <small>Must be an ImgBB.com URL (e.g., https://ibb.co/abc123 or https://i.ibb.co/xyz/image.jpg)</small>
                 <div class="file-requirements">
