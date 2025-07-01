@@ -95,8 +95,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (modelRequestForm) {
+        if (localStorage.getItem('hasSubmittedModelRequest')) {
+            modelRequestForm.querySelector('.submit-btn').disabled = true;
+            showError('You have already submitted a request.');
+        }
+
         modelRequestForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            if (localStorage.getItem('hasSubmittedModelRequest')) {
+                showError('You can only submit one request.');
+                return;
+            }
 
             const submitBtn = modelRequestForm.querySelector('.submit-btn');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
@@ -124,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Failed to submit request');
                 }
 
+                localStorage.setItem('hasSubmittedModelRequest', 'true');
+
                 showSuccess("Request submitted successfully! I'll contact you soon.");
                 modelRequestForm.reset();
 
@@ -132,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showError(error.message || 'Error submitting request. Please try again.');
             } finally {
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
-                submitBtn.disabled = false;
+                submitBtn.disabled = true;
             }
         });
     }
