@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages with Webhook Injection
+name: Deploy GitHub Pages with Token Injection
 
 on:
   push:
@@ -13,12 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Replace webhook placeholder with secret
-        run: |
-          sed -i "s|__DISCORD_WEBHOOK__|${{ secrets.DISCORD_WEBHOOK }}|g" index.js
+      - name: Replace GitHub PAT
+        run: sed -i "s|__GITHUB_PAT__|${{ secrets.ADMIN_PANEL_TOKEN }}|g" index.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -35,6 +34,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
