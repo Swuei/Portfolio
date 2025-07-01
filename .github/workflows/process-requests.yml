@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'form-submissions/*.json'
+      - 'index.js'
 
 jobs:
   send-to-discord:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -18,24 +20,33 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v41
 
+      - name: Replace GitHub token in JS
+        run: |
+          echo "Injecting token into index.js"
+          sed -i "s|__GITHUB_PAT__|${{ secrets.ADMIN_PANEL_TOKEN }}|g" index.js
+          echo "Token injection complete"
+
       - name: Process submissions
-  if: steps.changed-files.outputs.any_changed == 'true'
-  run: |
-    for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-      echo "Processing $file"
-      
-      CONTENT=$(jq -r '.content' "$file" | base64 -d)
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Processing $file"
 
-      DISCORD=$(echo "$CONTENT" | jq -r '.discord')
-      TOPIC=$(echo "$CONTENT" | jq -r '.topic')
-      DETAILS=$(echo "$CONTENT" | jq -r '.details')
-      USED_FOR=$(echo "$CONTENT" | jq -r '.usedFor')
-      TEXTURE_SIZE=$(echo "$CONTENT" | jq -r '.textureSize')
-      IMAGE_URL=$(echo "$CONTENT" | jq -r '.referenceImage')
+            CONTENT=$(jq -r '.content' "$file" | base64 -d)
 
-      export DISCORD TOPIC DETAILS USED_FOR TEXTURE_SIZE IMAGE_URL
+            DISCORD=$(echo "$CONTENT" | jq -r '.discord')
+            TOPIC=$(echo "$CONTENT" | jq -r '.topic')
+            DETAILS=$(echo "$CONTENT" | jq -r '.details')
+            USED_FOR=$(echo "$CONTENT" | jq -r '.usedFor')
+            TEXTURE_SIZE=$(echo "$CONTENT" | jq -r '.textureSize')
+            IMAGE_URL=$(echo "$CONTENT" | jq -r '.referenceImage')
 
-      cat <<EOF | envsubst | curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" -H "Content-Type: application/json" -d @-
+            export DISCORD TOPIC DETAILS USED_FOR TEXTURE_SIZE IMAGE_URL
+
+            echo "Sending embed to Discord..."
+            cat <<EOF | envsubst | curl -s -f -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+              -H "Content-Type: application/json" \
+              -d @-
 {
   "embeds": [{
     "title": "📦 New Model Request",
@@ -53,13 +64,22 @@ jobs:
 }
 EOF
 
-      git rm "$file"
-    done
+            git rm "$file"
+          done
 
+      - name: Restore placeholder in index.js
+        run: |
+          echo "Restoring token placeholder in index.js"
+          sed -i "s|${{ secrets.ADMIN_PANEL_TOKEN }}|__GITHUB_PAT__|g" index.js
 
+      - name: Commit and push changes
+        run: |
           if [ -n "$(git status --porcelain)" ]; then
+            echo "Committing changes..."
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
-            git commit -m "Remove processed submissions"
+            git commit -am "Remove processed submissions and restore token placeholder"
             git push
+          else
+            echo "No changes to commit"
           fi
