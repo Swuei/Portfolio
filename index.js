@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formStatus = document.getElementById('formStatus');
 
     const imageInput = document.getElementById('referenceImage');
-    let imagePreview; 
+    let imagePreview;
 
     if (imageInput) {
         const previewContainer = document.createElement('div');
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         previewLabel.className = 'preview-label';
         previewLabel.textContent = 'Image Preview:';
 
-        imagePreview = document.createElement('img'); 
+        imagePreview = document.createElement('img');
         imagePreview.className = 'image-preview';
         imagePreview.style.display = 'none';
 
@@ -99,88 +99,40 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             const submitBtn = modelRequestForm.querySelector('.submit-btn');
-            const originalBtnText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
 
-            const imageUrlInput = document.getElementById('referenceImage');
-            const imageUrl = imageUrlInput.value.trim();
-
-            if (!imageUrl) {
-                showError('Please provide an image URL');
-                resetSubmitButton();
-                return;
-            }
-
             try {
-                const url = new URL(imageUrl);
-                const validDomains = ['ibb.co', 'i.ibb.co'];
-
-                if (!validDomains.includes(url.hostname)) {
-                    throw new Error('Only ImgBB URLs are allowed (format: https://ibb.co/... or https://i.ibb.co/...)');
-                }
-
-                const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-                const pathHasExtension = imageExtensions.some(ext =>
-                    url.pathname.toLowerCase().endsWith(ext) ||
-                    url.pathname.toLowerCase().includes(ext + '/')
-                );
-
-                if (!pathHasExtension) {
-                    console.log('Assuming URL points to an image page');
-                }
-
                 const formData = new FormData(modelRequestForm);
                 const data = Object.fromEntries(formData.entries());
 
-                const githubToken = '__GITHUB_PAT__';
-                const repoOwner = 'Swuei';
-                const repoName = 'Portfolio';
+                const imgBbPattern = /^https:\/\/(i\.ibb\.co|ibb\.co)\/.*$/;
+                if (!imgBbPattern.test(data.referenceImage)) {
+                    throw new Error('Only ImgBB URLs are allowed (format: https://ibb.co/... or https://i.ibb.co/...)');
+                }
 
-                const embed = {
-                    title: '📦 New Model Request',
-                    color: 0x00ffd5,
-                    thumbnail: { url: 'https://i.ibb.co/MDhCjGRL/eye-block.png' },
-                    fields: [
-                        { name: '👤 Discord', value: `\`\`\`${data.discord}\`\`\``, inline: true },
-                        { name: '🎯 Topic', value: `\`\`\`${data.topic}\`\`\``, inline: true },
-                        { name: '🖼️ Texture Size', value: `\`\`\`${data.textureSize}\`\`\``, inline: true },
-                        { name: '🏷️ Used For', value: `\`\`\`${data.usedFor}\`\`\``, inline: true },
-                        { name: '📝 Details', value: `\`\`\`${data.details.substring(0, 1000)}\`\`\`` },
-                        { name: '📎 Image', value: `[View on ImgBB](${imageUrl})` }
-                    ],
-                    timestamp: new Date().toISOString(),
-                    footer: { text: 'New model request submitted' }
-                };
-
-                const issueBody = `
-**Embed Payload**
-\`\`\`json
-${JSON.stringify(embed, null, 2)}
-\`\`\`
-            `;
-
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, {
+                const response = await fetch(modelRequestForm.action, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `token ${githubToken}`,
-                        'Accept': 'application/vnd.github+json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        title: `New model request from ${data.discord}`,
-                        body: issueBody
-                    })
+                    body: JSON.stringify(data),
                 });
 
-                if (!response.ok) throw new Error('Failed to create GitHub Issue');
+                if (!response.ok) {
+                    throw new Error('Failed to submit request');
+                }
 
-                showSuccess('Request sent successfully! I\'ll contact you soon.');
+                showSuccess("Request submitted successfully! I'll contact you soon.");
                 modelRequestForm.reset();
+
             } catch (error) {
                 console.error('Error:', error);
-                showError(error.message || 'Error sending request. Please try again.');
+                showError(error.message || 'Error submitting request. Please try again.');
             } finally {
-                resetSubmitButton();
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+                submitBtn.disabled = false;
             }
         });
     }
