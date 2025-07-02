@@ -1,10 +1,10 @@
 {
-  "name": "Test",
-  "sketchfabLink": "Test",
-  "mediafireLink": "TEST",
-  "counterName": "TEST",
-  "fileSize": "TEST",
-  "modelCount": "TEST",
-  "uploadDate": "TEST",
-  "targetPage": "downloads3.html"
+  "name": "Robot Plushie (16x) [1]",
+  "sketchfabLink": "https://sketchfab.com/3d-models/robot-plushie-16x-a159a1193bb04d228cd8100bae7b5b5a",
+  "mediafireLink": "https://www.mediafire.com/file/fife6aj0p0fcces/Robot_Plushie.zip/file",
+  "counterName": "robot-plushie-counter",
+  "fileSize": "5.19KB",
+  "modelCount": "1 Model & 1 Texture",
+  "uploadDate": "07/01/2025",
+  "targetPage": "downloads2.html"
 }
