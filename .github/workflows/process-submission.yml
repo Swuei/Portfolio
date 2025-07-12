@@ -23,13 +23,13 @@ jobs:
           pip install beautifulsoup4
           sudo apt-get update && sudo apt-get install -y jq
 
-          - name: Create processing script
-            run: |
-              cat << 'EOF' > process_entry.py
-              import json
-              import os
-              from bs4 import BeautifulSoup
-
+      - name: Create processing script
+        run: |
+          cat << 'EOF' > process_entry.py
+          import json
+          import os
+          from bs4 import BeautifulSoup
+          
           def count_entries(column):
               return len(column.find_all('div', class_='download-item'))
           
@@ -89,10 +89,11 @@ jobs:
               except Exception as e:
                   print(f'Error processing entry: {str(e)}')
                   return 1
-
+          
           if __name__ == '__main__':
               exit(main())
           EOF
+
 
       - name: Process entry
         env:
