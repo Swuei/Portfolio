@@ -81,6 +81,7 @@ jobs:
                       </div>
                   </div>
                   """
+
           
                   target_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
           
