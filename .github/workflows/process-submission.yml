@@ -114,6 +114,8 @@ jobs:
             --arg models "${{ github.event.client_payload.modelCount }}" \
             --arg date "${{ github.event.client_payload.uploadDate }}" \
             --arg page "${{ github.event.client_payload.targetPage }}" \
+            --arg isNew "${{ github.event.client_payload.isNew }}" \
+            --arg isAnimated "${{ github.event.client_payload.isAnimated }}" \
             '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page}' > payload.json
 
           python3 process_entry.py || exit 1
