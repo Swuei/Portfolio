@@ -113,9 +113,13 @@ jobs:
             --arg page "${{ github.event.client_payload.targetPage }}" \
             --arg isNew "${{ github.event.client_payload.isNew }}" \
             --arg isAnimated "${{ github.event.client_payload.isAnimated }}" \
-            '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page}' > payload.json
-
+            '{name: $name, sketchfabLink: $sketchfab, mediafireLink: $mediafire, counterName: $counter, fileSize: $size, modelCount: $models, uploadDate: $date, targetPage: $page, isNew: ($isNew | test("true")), isAnimated: ($isAnimated | test("true"))}' > payload.json
+      
+          echo "------ PAYLOAD.JSON ------"
+          cat payload.json
+      
           python3 process_entry.py || exit 1
+
 
       - name: Commit and push changes
         run: |
