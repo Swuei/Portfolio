@@ -30,10 +30,8 @@ def main():
         <div class="download-item">
             <div class="download-item-header">
                 <h4>{payload["name"]}</h4>
-                <div class="tags">
-                    <span class="new-slider">(NEW!)</span>
-                    {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated") else ''}
-                </div>
+                {'<span class="new-slider">(NEW!)</span>' if payload.get("isNew", False) else ''}
+                {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated", False) else ''}
                 <span class="download-item-count" data-counter="{payload["counterName"]}">
                     <i class="fas fa-download"></i> <span>0</span>
                 </span>
@@ -53,7 +51,6 @@ def main():
             </div>
         </div>
         """
-
 
 
         target_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
