@@ -32,7 +32,7 @@ def main():
                 <h4>{payload["name"]}</h4>
                 <div class="tags">
                     <span class="new-slider">(NEW!)</span>
-                    {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated") else ''}
+                    {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated", False) else ''}
                 </div>
                 <span class="download-item-count" data-counter="{payload["counterName"]}">
                     <i class="fas fa-download"></i> <span>0</span>
