@@ -1821,6 +1821,7 @@ footer {
     font-size: 0.9rem;
 }
 .new-slider {
+    font-weight: bold;
     background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
     background-size: 400% 400%;
     color: white;
@@ -1833,6 +1834,10 @@ footer {
     animation: rainbowSlide 3s linear infinite, pulse 2s infinite;
     position: relative;
     overflow: hidden;
+}
+
+.new-slider {
+    font-weight: bold;
 }
 
 @keyframes rainbowSlide {
