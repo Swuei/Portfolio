@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     console.log("Admin panel initialized successfully");
 
     const GITHUB_REPO = 'Swuei/Portfolio';
@@ -168,7 +168,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 fileSize: document.getElementById('fileSize').value,
                 modelCount: document.getElementById('modelCount').value,
                 uploadDate: document.getElementById('uploadDate').value,
-                targetPage: document.getElementById('targetPage').value
+                targetPage: document.getElementById('targetPage').value,
+                isNew: true,
+                isAnimated: document.getElementById('entryName').value.includes('Animated')
             };
 
             if (!formData.name || !formData.mediafireLink || !formData.counterName) {

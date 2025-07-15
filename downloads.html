@@ -1,3 +1,4 @@
+﻿﻿
 ﻿
 <!DOCTYPE html>
 <html lang="en">
@@ -254,7 +255,7 @@
                 <!-- Self Note: When adding new products start from here so that the structure stays intact -->
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Futuristic Crate [1] (16x) | </h4> <span><i class="fas fa-cogs"></i> Animated</span>
+                        <h4>Futuristic Crate [1] (16x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
                         <span class="download-item-count" data-counter="future-crate-counter">
                             <i class="fas fa-download"></i> <span>0</span>
                         </span>
@@ -281,7 +282,7 @@
                 </div>
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Ent & Mushroom Pets [2] (32x) | </h4> <span><i class="fas fa-cogs"></i> Animated</span>
+                        <h4>Ent & Mushroom Pets [2] (32x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
                         <span class="download-item-count" data-counter="pet-entmush-counter">
                             <i class="fas fa-download"></i> <span>0</span>
                         </span>
@@ -313,7 +314,7 @@
                 </div>
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Dungeon Door [1] (32x) | </h4> <span><i class="fas fa-cogs"></i> Animated</span>
+                        <h4>Dungeon Door [1] (32x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
                         <span class="download-item-count" data-counter="dungeon-door-counter">
                             <i class="fas fa-download"></i> <span>0</span>
                         </span>
@@ -419,6 +420,14 @@
                 </div>
                 <button class="admin-submit-btn" id="loginBtn">Login</button>
             </div>
+            <div class="admin-form-group">
+                <label for="isNew">Mark as New:</label>
+                <input type="checkbox" id="isNew" checked>
+            </div>
+            <div class="admin-form-group">
+                <label for="isAnimated">Mark as Animated:</label>
+                <input type="checkbox" id="isAnimated">
+            </div>
             <div id="entryForm" style="display: none;">
                 <div class="admin-form-group">
                     <label for="entryName">Model Name:</label>
@@ -496,18 +505,18 @@
                     </ul>
                     <p>I don't collect personally identifiable information without your consent.</p>
                 </div>
-            <div class="privacy-column" style="grid-column: 2 / span 4; text-align: center; margin: 0 auto;">
-                <h3>Form Data Collection</h3>
-                <p>When you submit a model request form, I collect:</p>
-                <ul style="display: inline-block; text-align: left;">
-                    <li>Your Discord username</li>
-                    <li>Model request details</li>
-                    <li>Reference image URL (hosted on ImgBB)</li>
-                    <li>Texture size preference</li>
-                    <li>Intended use of the model</li>
-                </ul>
+                <div class="privacy-column" style="grid-column: 2 / span 4; text-align: center; margin: 0 auto;">
+                    <h3>Form Data Collection</h3>
+                    <p>When you submit a model request form, I collect:</p>
+                    <ul style="display: inline-block; text-align: left;">
+                        <li>Your Discord username</li>
+                        <li>Model request details</li>
+                        <li>Reference image URL (hosted on ImgBB)</li>
+                        <li>Texture size preference</li>
+                        <li>Intended use of the model</li>
+                    </ul>
+                </div>
             </div>
-        </div>
             <div class="privacy-update">
                 <p><strong>Last Updated:</strong> May 20, 2025</p>
                 <p>This policy may be updated periodically. Please check back for changes.</p>

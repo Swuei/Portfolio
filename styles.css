@@ -1,4 +1,4 @@
-* {
+﻿* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -727,6 +727,7 @@ footer {
             height: 400px;
         }
 }
+
 .top-bar-btn.downloads-btn {
     border: 2px solid transparent;
     border-image: linear-gradient(90deg, #00ffd5, #4d79ff);
@@ -1016,6 +1017,7 @@ footer {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
 #privacy {
     background: #151515;
     padding: 4rem 2rem;
@@ -1106,19 +1108,21 @@ footer {
         #privacy .privacy-update p {
             margin-bottom: 0.5rem;
         }
-    #update .update-update {
-        text-align: center;
-        color: #888;
-        font-size: 0.9rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #333;
-        font-family: 'Roboto', sans-serif;
+
+#update .update-update {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+    font-family: 'Roboto', sans-serif;
+}
+
+    #update .update-update p {
+        margin-bottom: 0.5rem;
     }
 
-        #update .update-update p {
-            margin-bottom: 0.5rem;
-        }
 .download-pageflipper {
     display: flex;
     justify-content: flex-end;
@@ -1257,8 +1261,8 @@ footer {
     .discord-widget iframe {
         height: 350px;
     }
-
 }
+
 .admin-btn {
     position: fixed;
     bottom: 30px;
@@ -1414,6 +1418,7 @@ footer {
     background-color: #4caf50;
     color: white;
 }
+
 .shaking-bell {
     color: #00ffd5;
     margin-right: 8px;
@@ -1557,6 +1562,7 @@ footer {
         gap: 0.5rem;
     }
 }
+
 .request-section {
     background: #1a1a1a;
     border-radius: 10px;
@@ -1715,6 +1721,7 @@ footer {
         width: 100%;
     }
 }
+
 .form-group label::after {
     content: ' *';
     color: #ff5252;
@@ -1747,6 +1754,7 @@ footer {
     border-radius: 6px;
     border: 1px solid #333;
 }
+
 .file-requirements {
     background: rgba(0, 255, 213, 0.1);
     border-left: 3px solid #00ffd5;
@@ -1811,4 +1819,116 @@ footer {
     margin-bottom: 0.5rem;
     color: #00ffd5;
     font-size: 0.9rem;
+}
+.new-slider {
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
+    background-size: 400% 400%;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    display: inline-block;
+    animation: rainbowSlide 3s linear infinite, pulse 2s infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes rainbowSlide {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.animated-tag {
+    background: linear-gradient(135deg, #00ffd5, #4d79ff);
+    color: #111;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 10px rgba(0, 255, 213, 0.5);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 213, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 255, 213, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 213, 0);
+    }
+}
+.admin-form-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #00ffd5;
+    border-radius: 4px;
+    background-color: #2c2c2c;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+}
+
+    .admin-form-group input[type="checkbox"]:checked {
+        background-color: #00ffd5;
+    }
+
+        .admin-form-group input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            color: #111;
+            font-size: 12px;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    .admin-form-group input[type="checkbox"]:hover {
+        box-shadow: 0 0 5px rgba(0, 255, 213, 0.5);
+    }
+
+.admin-form-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #bbb;
+    transition: color 0.2s ease;
+}
+
+    .admin-form-group label:hover {
+        color: #00ffd5;
+    }
+
+#isNew:checked + label::after {
+    content: ' (Will show rainbow "NEW" tag)';
+    color: #bbb;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+#isAnimated:checked + label::after {
+    content: ' (Will show animated tag)';
+    color: #bbb;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
 }
