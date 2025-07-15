@@ -1937,3 +1937,114 @@ footer {
     font-size: 0.8rem;
     margin-left: 0.5rem;
 }
+.download-stats {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 1rem;
+    z-index: 1;
+}
+
+@keyframes counterBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.total-downloads-bounce {
+    animation: counterBounce 0.4s ease;
+}
+
+.total-downloads-spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: #00ffd5;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: sparkFly 0.8s ease-out forwards;
+    z-index: -1;
+}
+
+@keyframes sparkFly {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(var(--spark-x, 0), var(--spark-y, -50px));
+        opacity: 0;
+    }
+}
+
+.total-downloads {
+    background: rgba(0, 255, 213, 0.1);
+    border: 2px solid #00ffd5;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    color: #00ffd5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 213, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+    .total-downloads::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(to bottom right, transparent, transparent, transparent, rgba(0, 255, 213, 0.1), transparent, transparent, transparent);
+        transform: rotate(30deg);
+        animation: shine 3s infinite;
+    }
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) rotate(30deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(30deg);
+    }
+}
+
+.total-downloads i {
+    font-size: 1.2rem;
+}
+
+.total-downloads span {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .download-stats {
+        position: static;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+
+    .total-downloads {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+}
+
+.total-downloads:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 255, 213, 0.3);
+}

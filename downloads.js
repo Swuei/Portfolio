@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 800,
@@ -37,6 +37,47 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
+    async function updateTotalDownloads() {
+        if (!db) return;
+        try {
+            const snapshot = await db.collection("downloads").get();
+            const totalElement = document.getElementById('totalDownloads');
+            if (totalElement) {
+                const newCount = snapshot.size.toLocaleString();
+
+                if (totalElement.textContent !== newCount) {
+                    for (let i = 0; i < 8; i++) {
+                        const spark = document.createElement('div');
+                        spark.className = 'total-downloads-spark';
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 30 + Math.random() * 30;
+                        spark.style.setProperty('--spark-x', `${Math.cos(angle) * distance}px`);
+                        spark.style.setProperty('--spark-y', `${Math.sin(angle) * distance}px`);
+                        spark.style.left = `${50 + Math.cos(angle) * 10}%`;
+                        spark.style.top = `${50 + Math.sin(angle) * 10}%`;
+                        totalElement.parentElement.appendChild(spark);
+
+                        setTimeout(() => {
+                            spark.remove();
+                        }, 800);
+                    }
+
+                    totalElement.classList.add('total-downloads-bounce');
+
+                    setTimeout(() => {
+                        totalElement.textContent = newCount;
+                    }, 200);
+
+                    setTimeout(() => {
+                        totalElement.classList.remove('total-downloads-bounce');
+                    }, 400);
+                }
+            }
+        } catch (error) {
+            console.error('Error updating total downloads:', error);
+        }
+    }
+
     async function updateCounter(fileId) {
         if (!db) return;
         try {
@@ -57,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return updateCounter(fileId);
         });
         await Promise.all(updatePromises);
+        updateTotalDownloads(); 
     }
 
     function setButtonState(button, state, html = null) {
@@ -99,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userAgent: navigator.userAgent,
             source: 'mediafire'
         });
+        updateTotalDownloads(); 
     }
 
     async function processDownload(event, fileId, button, downloadUrl) {
