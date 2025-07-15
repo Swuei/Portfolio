@@ -1,12 +1,12 @@
 {
   "name": "DEBUGGING IS FUCKING ANNOYING",
-  "sketchfabLink": "DEBUGGING IS FUCKING ANNOYING",
-  "mediafireLink": "DEBUGGING IS FUCKING ANNOYING",
-  "counterName": "DEBUGGING IS FUCKING ANNOYING",
+  "sketchfabLink": "https://sketchfab.com/swuei",
+  "mediafireLink": "https://www.mediafire.com/file/afhcioqlpheyhet/fish_tank.zip/file",
+  "counterName": "fish-tank-counter",
   "fileSize": "DEBUGGING IS FUCKING ANNOYING",
   "modelCount": "DEBUGGING IS FUCKING ANNOYING",
   "uploadDate": "DEBUGGING IS FUCKING ANNOYING",
   "targetPage": "downloads2.html",
-  "isNew": false,
-  "isAnimated": false
+  "isNew": true,
+  "isAnimated": true
 }
