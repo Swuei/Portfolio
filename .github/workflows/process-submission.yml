@@ -57,18 +57,20 @@ jobs:
                   new_entry = f"""
                   <div class="download-item">
                       <div class="download-item-header">
-                          <h4>{payload["name"]}</h4>
-                          {'<span class="new-slider">(NEW!)</span>' if payload.get("isNew", False) else ''}
+                          <h4>{payload["name"]} | </h4>
                           {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated", False) else ''}
+                          <div class="tags">
+                              {'<span class="new-slider">(NEW!)</span>' if payload.get("isNew", False) else ''}
+                          </div>
                           <span class="download-item-count" data-counter="{payload["counterName"]}">
                               <i class="fas fa-download"></i> <span>0</span>
                           </span>
                       </div>
                       <div class="download-links">
-                          <a href="{payload["mediafireLink"]}" class="download-btn" target="_blank" data-download="true">
+                          <a class="download-btn" data-download="true" href="{payload["mediafireLink"]}" onclick="trackDownload(event, '{payload["counterName"]}')" target="_blank">
                               <i class="fas fa-file-archive"></i> Download ZIP
                           </a>
-                          <a href="{payload["sketchfabLink"]}" class="download-btn" target="_blank">
+                          <a class="download-btn" href="{payload["sketchfabLink"]}" target="_blank">
                               <i class="fas fa-eye"></i> Preview
                           </a>
                       </div>
