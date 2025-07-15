@@ -169,8 +169,8 @@
                 modelCount: document.getElementById('modelCount').value,
                 uploadDate: document.getElementById('uploadDate').value,
                 targetPage: document.getElementById('targetPage').value,
-                isNew: true,
-                isAnimated: document.getElementById('entryName').value.includes('Animated')
+                isNew: document.getElementById('isNew').checked,
+                isAnimated: document.getElementById('isAnimated').checked
             };
 
             if (!formData.name || !formData.mediafireLink || !formData.counterName) {
