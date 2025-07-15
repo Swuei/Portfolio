@@ -57,20 +57,20 @@ jobs:
                   new_entry = f"""
                   <div class="download-item">
                       <div class="download-item-header">
-                          <h4>{payload["name"]} | </h4>
-                          {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated", False) else ''}
+                          <h4>{payload["name"]}</h4>
                           <div class="tags">
-                              {'<span class="new-slider">(NEW!)</span>' if payload.get("isNew", False) else ''}
+                              <span class="new-slider">(NEW!)</span>
+                              {'<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>' if payload.get("isAnimated") else ''}
                           </div>
                           <span class="download-item-count" data-counter="{payload["counterName"]}">
                               <i class="fas fa-download"></i> <span>0</span>
                           </span>
                       </div>
                       <div class="download-links">
-                          <a class="download-btn" data-download="true" href="{payload["mediafireLink"]}" onclick="trackDownload(event, '{payload["counterName"]}')" target="_blank">
+                          <a href="{payload["mediafireLink"]}" class="download-btn" target="_blank" data-download="true">
                               <i class="fas fa-file-archive"></i> Download ZIP
                           </a>
-                          <a class="download-btn" href="{payload["sketchfabLink"]}" target="_blank">
+                          <a href="{payload["sketchfabLink"]}" class="download-btn" target="_blank">
                               <i class="fas fa-eye"></i> Preview
                           </a>
                       </div>
@@ -81,6 +81,7 @@ jobs:
                       </div>
                   </div>
                   """
+
 
           
                   target_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
