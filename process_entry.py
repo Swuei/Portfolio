@@ -54,6 +54,7 @@ def main():
         </div>
         """
 
+
         target_column.insert(0, BeautifulSoup(new_entry, 'html.parser'))
 
         with open(target_page, 'w') as f:
