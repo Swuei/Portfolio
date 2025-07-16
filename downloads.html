@@ -1,64 +1,145 @@
+﻿﻿﻿
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-DN9PTRHS4G');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Center</title>
+    <title>Swuei | Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="downloads.js"></script>
+    <script src="admin.js"></script>
+
 </head>
 <body>
-    <nav class="top-bar">
-        <div class="top-bar-nav">
-            <button class="top-bar-btn"><i class="fas fa-user"></i> About Me</button>
-            <button class="top-bar-btn"><i class="fas fa-cube"></i> Models</button>
-            <button class="top-bar-btn"><i class="fas fa-envelope"></i> Make a Request</button>
-            <button class="top-bar-btn"><i class="fas fa-cube"></i> Sketchfab</button>
-            <button class="top-bar-btn downloads-btn"><i class="fas fa-download"></i> Downloads</button>
-            <button class="top-bar-btn"><i class="fas fa-shield-alt"></i> Privacy</button>
-        </div>
-    </nav>
+    <div class="top-bar">
+        <nav class="top-bar-nav">
+            <button class="top-bar-btn" onclick="window.location.href='index.html#about'">
+                <i class="fas fa-user"></i>
+                <span>About Me</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
+                <i class="fas fa-cube"></i>
+                <span>Models</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#request'">
+                <i class="fas fa-paper-plane"></i>
+                <span>Make a Request</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
+                <i class="fas fa-user-circle"></i>
+                <span>Sketchfab</span>
+            </button>
+            <button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='#privacy'">
+                <i class="fas fa-shield-alt"></i>
+                <span>Privacy</span>
+            </button>
+        </nav>
+    </div>
 
-    <section id="downloadCenter" class="downloads-container">
-        <h1 class="section-title">Download Center</h1>
-        <p>Most of my free models, all in one place — no more DM requests! This hub is regularly updated with new resources for server owners and players alike.</p>
-        <p>This is a prototype download page. Some features might not work perfectly yet — updates are on the way. If any of the download links or download counters don't work, please message me on discord @swuei.</p>
-        <div>
-            <a href="https://sketchfab.com/swuei" target="_blank" class="download-btn">Sketchfab</a>
-            <a href="#privacy" class="download-btn">Privacy Policy</a>
-            <button id="shareBtn" class="download-btn"><i class="fas fa-link"></i> Share my Page</button>
-            <button id="adminBtn" class="admin-btn"><i class="fas fa-cog"></i></button>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Download Center</h2>
+                <p>
+                    Most of my free models, all in one place — no more DM requests! This hub is regularly updated with new resources for server owners and players alike.
+                </p>
+
+                <div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
+                    <p>
+                        This is a <strong>prototype</strong> download page. Some features might not work perfectly yet — updates are on the way. If any of the download links or download counters don't work, please message me on discord @swuei.
+                    </p>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <a href="https://sketchfab.com/swuei" class="btn" target="_blank" rel="noopener noreferrer">Sketchfab</a>
+                    <a href="#privacy" class="btn" style="background-color: #00ffd5; color: #111;">Privacy Policy</a>
+                    <button class="btn" id="share-page-btn"><i class="fas fa-link"></i> Share my Page</button>
+                </div>
+            </div>
+
+            <img src="https://i.ibb.co/MDhCjGRL/eye-block.png" alt="Download Icon" class="hero-logo" />
         </div>
         <div class="download-stats">
-            <div class="total-downloads" id="totalDownloads"><i class="fas fa-download"></i> <span>0</span> Total Downloads</div>
+            <div class="total-downloads">
+                <i class="fas fa-download"></i>
+                <span id="totalDownloads">0</span> Total Downloads
+            </div>
         </div>
     </section>
 
-    <section class="downloads-container">
-        <h2 class="section-title">Swuei's 3D Models</h2>
-        <p>Complete packs of my 3D models ready for use in your Minecraft server or resource pack.</p>
-        <div class="highlighted-pagination">
-            <span class="pageflipper-notice">Download and view more of my models by clicking these buttons below! <i class="fas fa-arrow-down animated-arrow"></i></span>
-            <div class="download-pageflipper">
-                <a href="downloads.html" class="page-link active">1</a>
-                <span class="page-divider">|</span>
-                <a href="downloads2.html" class="page-link">2</a>
-                <span class="page-divider">|</span>
-                <a href="downloads3.html" class="page-link">3</a>
-            </div>
+    <section id="model-packs" class="download-section" data-aos="fade-up">
+        <div class="download-header">
+            <h3 class="download-title">Swuei's 3D Models</h3>
         </div>
+        <p class="download-description">
+            Complete packs of my 3D models ready for use in your Minecraft server or resource pack.
+        </p>
+
+        <div class="download-pageflipper highlighted-pagination">
+            <div class="pageflipper-notice">
+                <i class="fas fa-bell shaking-bell"></i>
+                <span>Download and view more of my models by clicking these buttons below!</span>
+                <div class="animated-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <button class="arrow-btn arrow-left" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="page-link active">1</span>
+            <span class="page-divider">|</span>
+            <a href="downloads2.html" class="page-link">2</a>
+            <span class="page-divider">|</span>
+            <a href="downloads3.html" class="page-link">3</a>
+            <a href="downloads2.html" class="arrow-btn arrow-right">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+
         <div class="download-columns">
             <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Quest Board [1] (32x)</h4>
-                        <span class="download-item-count" data-counter="quest-board"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="quest-board-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/x6ze9tc6g0zpz7n/Quest_Board.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'quest-board-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/quest-board-6b4eca1f6f6a4e0fa35124bafba8b03b"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 5.99KB</span>
@@ -69,11 +150,23 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Furniture Set [5] (16x)</h4>
-                        <span class="download-item-count" data-counter="furniture-set"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="furniture-set-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/sfrxvf6c941tfid/Furniture_Pack_%25231.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'furniture-set-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/furniture-set-16x-fbd288895820422296b0d826cebd75ad"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 346.88KB</span>
@@ -84,11 +177,23 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Warden Plushie [1] (16x)</h4>
-                        <span class="download-item-count" data-counter="warden-plushie"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="warden-plushie-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/dy76vpmoti9n1z7/Warden_Plushie.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'warden-plushie-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/free-minecraft-warden-plushie-16x-b1fe9168a461423d969872b57314414a"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 5.175KB</span>
@@ -99,11 +204,23 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Crate Variety Pack [4] (32x)</h4>
-                        <span class="download-item-count" data-counter="crate-variety"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="crate-variety-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/frwv10f1x7lvxy9/Crates_Pack.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'crate-variety-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/models/fabae8c8beec464c823d73da8e66f691"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 16.65KB</span>
@@ -114,11 +231,23 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>UFO [1] (16x)</h4>
-                        <span class="download-item-count" data-counter="ufo"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="ufo-unmanned-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/bnvnxe794xt9z2o/UFO.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'ufo-unmanned-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/ufo-16x-cd9bc6396b9e4962847333fb88562978"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 5.77KB</span>
@@ -127,16 +256,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Self Note: This is the start of the right collum -->
             <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Futuristic Crate [1] (16x)</h4>
-                        <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
-                        <span class="download-item-count" data-counter="futuristic-crate"><i class="fas fa-download"></i> <span>0</span></span>
+                        <h4>Futuristic Crate [1] (16x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
+                        <span class="download-item-count" data-counter="future-crate-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/mvjkdsbx46v7z2v/Futuristic_Chest.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'future-crate-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/crate-model-001-16x-6efbe467d8a340b5b4533268091501d6"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 138.56KB</span>
@@ -146,14 +289,29 @@
                 </div>
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Ent & Mushroom Pets [2] (32x)</h4>
-                        <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
-                        <span class="download-item-count" data-counter="ent-mushroom"><i class="fas fa-download"></i> <span>0</span></span>
+                        <h4>Ent & Mushroom Pets [2] (32x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
+                        <span class="download-item-count" data-counter="pet-entmush-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/eiarspcq9miosf7/Ent_%2526_Mushroom_Pets.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'pet-entmush-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/mushroom-pet-32x-9c08f1c3ee8f4c0983830b02e707596d"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/ent-pet-32x-af0465835b174f1baed106841088f106"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 286.35KB</span>
@@ -163,13 +321,24 @@
                 </div>
                 <div class="download-item">
                     <div class="download-item-header">
-                        <h4>Dungeon Door [1] (32x)</h4>
-                        <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
-                        <span class="download-item-count" data-counter="dungeon-door"><i class="fas fa-download"></i> <span>0</span></span>
+                        <h4>Dungeon Door [1] (32x) | </h4> <span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
+                        <span class="download-item-count" data-counter="dungeon-door-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/g42qty34iupq8xr/Dungeon_Door.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'dungeon-door-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/dungeon-door-32x-cc121d18e1954fd8adf45332f74461ac"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 587.48KB</span>
@@ -180,11 +349,23 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Crystals Pack [5] (32x)</h4>
-                        <span class="download-item-count" data-counter="crystals-pack"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="crystals-pack-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/irz7pqfrk5dxphc/Crystals_Pack.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'crystals-pack-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/free-crystals-32x-a6e17990eae44a37b83d026aeba5dfd2"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 12.63KB</span>
@@ -195,12 +376,28 @@
                 <div class="download-item">
                     <div class="download-item-header">
                         <h4>Wishing Well [3] (16x)</h4>
-                        <span class="download-item-count" data-counter="wishing-well"><i class="fas fa-download"></i> <span>0</span></span>
+                        <span class="download-item-count" data-counter="wishing-well-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
                     </div>
                     <div class="download-links">
-                        <a href="#" class="download-btn" target="_blank" data-download="true"><i class="fas fa-file-archive"></i> Download ZIP</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
-                        <a href="#" class="download-btn" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                        <a href="https://www.mediafire.com/file/ttcfb03gxgjsjcb/Wishing_Well.zip/file"
+                           class="download-btn"
+                           target="_blank"
+                           data-download="true"
+                           onclick="trackDownload(event, 'wishing-well-counter')">
+                            <i class="fas fa-file-archive"></i> Download ZIP
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/wishing-well-9399573489e04d1a9772d38ed906defe"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
+                        <a href="https://sketchfab.com/3d-models/wishing-well-16x-ed72b2db0c0843ac9495abd15029e8bb"
+                           class="download-btn"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> Preview
+                        </a>
                     </div>
                     <div class="download-meta">
                         <span><i class="fas fa-file-archive"></i> 19.42KB</span>
@@ -212,76 +409,76 @@
         </div>
     </section>
 
-    <div id="adminModal" class="admin-modal">
+    <button class="admin-btn" id="adminBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+    <div class="admin-modal" id="adminModal">
         <div class="admin-modal-content">
-            <span class="admin-close-btn"><i class="fas fa-times"></i></span>
-            <div id="statusNotification" class="status-notification" style="display: none;"></div>
-            <form id="loginForm">
-                <h3>Admin Login</h3>
+            <span class="admin-close-btn">×</span>
+            <h3>Admin Panel</h3>
+            <div id="loginForm">
                 <div class="admin-form-group">
-                    <label for="githubToken">Username</label>
-                    <input type="text" id="githubToken" placeholder="Enter token" required>
+                    <label for="githubToken">Username:</label>
+                    <input id="githubToken" placeholder="Enter your Username" type="password" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="tokenExpiry">Username Expiry</label>
-                    <input type="datetime-local" id="tokenExpiry" required>
+                    <label for="tokenExpiry">Username Expiry:</label>
+                    <input id="tokenExpiry" placeholder="Expiry" type="text" />
                 </div>
-                <button type="button" id="loginBtn" class="admin-submit-btn">Login</button>
-            </form>
-            <form id="entryForm" style="display: none;">
-                <h3>Add Entry</h3>
+                <button class="admin-submit-btn" id="loginBtn">Login</button>
+            </div>
+            <div id="entryForm" style="display: none;">
                 <div class="admin-form-group">
-                    <input type="checkbox" id="isNew">
-                    <label for="isNew">Mark as New</label>
+                    <label for="isNew">Mark as New:</label>
+                    <input type="checkbox" id="isNew" checked>
                 </div>
                 <div class="admin-form-group">
+                    <label for="isAnimated">Mark as Animated:</label>
                     <input type="checkbox" id="isAnimated">
-                    <label for="isAnimated">Mark as Animated</label>
                 </div>
                 <div class="admin-form-group">
-                    <label for="entryName">Model Name</label>
-                    <input type="text" id="entryName" placeholder="Enter model name" required>
+                    <label for="entryName">Model Name:</label>
+                    <input id="entryName" placeholder="Fish Tank [1] (16x) | Animated" type="text" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="sketchfabLink">Sketchfab Link</label>
-                    <input type="text" id="sketchfabLink" placeholder="Enter Sketchfab URL">
+                    <label for="sketchfabLink">Sketchfab Link:</label>
+                    <input id="sketchfabLink" placeholder="https://sketchfab.com/3d-models/..." type="url" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="mediafireLink">Mediafire Link</label>
-                    <input type="text" id="mediafireLink" placeholder="Enter Mediafire URL" required>
+                    <label for="mediafireLink">Mediafire Link:</label>
+                    <input id="mediafireLink" placeholder="https://www.mediafire.com/file/..." type="url" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="counterName">Counter Name</label>
-                    <input type="text" id="counterName" placeholder="Enter unique counter name" required>
+                    <label for="counterName">Counter Name:</label>
+                    <input id="counterName" placeholder="fish-tank-counter" type="text" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="fileSize">File Size</label>
-                    <input type="text" id="fileSize" placeholder="e.g., 5.99KB">
+                    <label for="fileSize">File Size:</label>
+                    <input id="fileSize" placeholder="376.31KB" type="text" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="modelCount">Model Count</label>
-                    <input type="number" id="modelCount" placeholder="e.g., 1">
+                    <label for="modelCount">Model Count:</label>
+                    <input id="modelCount" placeholder="1 Model &amp; 1 Texture" type="text" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="uploadDate">Upload Date</label>
-                    <input type="date" id="uploadDate" placeholder="Select date">
+                    <label for="uploadDate">Upload Date:</label>
+                    <input id="uploadDate" placeholder="06/01/2025" type="text" />
                 </div>
                 <div class="admin-form-group">
-                    <label for="targetPage">Target Page</label>
+                    <label for="targetPage">Target Page:</label>
                     <select id="targetPage">
-                        <option value="">Select Page</option>
-                        <option value="downloads">Page 1</option>
-                        <option value="downloads2">Page 2</option>
-                        <option value="downloads3">Page 3</option>
+                        <option value="downloads.html">Page 1</option>
+                        <option value="downloads2.html">Page 2</option>
+                        <option value="downloads3.html">Page 3</option>
                     </select>
                 </div>
-                <button type="button" id="submitEntryBtn" class="admin-submit-btn">Add Entry</button>
-                <button type="button" id="logoutBtn" class="admin-submit-btn">Logout</button>
-            </form>
+                <button class="admin-submit-btn" id="submitEntryBtn">Add Entry</button>
+            </div>
         </div>
     </div>
+    <div class="status-notification" id="statusNotification"></div>
 
-    <section id="privacy">
+    <section id="privacy" class="privacy-section">
         <div class="privacy-container">
             <h2>Privacy Policy</h2>
             <div class="privacy-content">
@@ -315,10 +512,10 @@
                     </ul>
                     <p>I don't collect personally identifiable information without your consent.</p>
                 </div>
-                <div class="privacy-column">
+                <div class="privacy-column" style="grid-column: 2 / span 4; text-align: center; margin: 0 auto;">
                     <h3>Form Data Collection</h3>
                     <p>When you submit a model request form, I collect:</p>
-                    <ul>
+                    <ul style="display: inline-block; text-align: left;">
                         <li>Your Discord username</li>
                         <li>Model request details</li>
                         <li>Reference image URL (hosted on ImgBB)</li>
@@ -328,19 +525,19 @@
                 </div>
             </div>
             <div class="privacy-update">
-                <p>Last Updated: May 20, 2025</p>
+                <p><strong>Last Updated:</strong> May 20, 2025</p>
                 <p>This policy may be updated periodically. Please check back for changes.</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2025 Swuei. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://discord.com/users/817968354979610624" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://sketchfab.com/Swuei" target="_blank" aria-label="Sketchfab"><i class="fas fa-cube"></i></a>
+            <a href="https://github.com/Swuei" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2025 Swuei. All rights reserved.</p>
     </footer>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="admin.js"></script>
-    <script src="downloads.js"></script>
 </body>
 </html>
