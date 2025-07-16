@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 800,
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return updateCounter(fileId);
         });
         await Promise.all(updatePromises);
-        updateTotalDownloads(); 
+        updateTotalDownloads();
     }
 
     function setButtonState(button, state, html = null) {
@@ -143,14 +143,14 @@ document.addEventListener('DOMContentLoaded', function () {
             userAgent: navigator.userAgent,
             source: 'mediafire'
         });
-        updateTotalDownloads(); 
+        updateTotalDownloads();
     }
 
     async function processDownload(event, fileId, button, downloadUrl) {
         try {
             setButtonState(button, 'loading', '<i class="fas fa-spinner fa-spin"></i> Processing...');
             if (isAlreadyDownloaded(fileId)) {
-                showNotification();
+                showNotification('You can only download this resource once to prevent inaccurate count');
                 setButtonState(button, 'default');
                 return;
             }
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const downloadUrl = button.getAttribute('href');
         if (!fileId || !downloadUrl) return;
         if (button.classList.contains('disabled')) {
-            showNotification();
+            showNotification('You can only download this resource once to prevent inaccurate count');
             return;
         }
         processDownload(e, fileId, button, downloadUrl);
