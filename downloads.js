@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 800,
@@ -100,7 +100,7 @@
             return updateCounter(fileId);
         });
         await Promise.all(updatePromises);
-        updateTotalDownloads();
+        updateTotalDownloads(); 
     }
 
     function setButtonState(button, state, html = null) {
@@ -143,7 +143,7 @@
             userAgent: navigator.userAgent,
             source: 'mediafire'
         });
-        updateTotalDownloads();
+        updateTotalDownloads(); 
     }
 
     async function processDownload(event, fileId, button, downloadUrl) {
@@ -189,17 +189,77 @@
         setButtonState(button, 'loading', '<i class="fas fa-spinner fa-spin"></i> Copying...');
         const urlToCopy = 'https://swuei.github.io/Portfolio/downloads';
 
-        if (navigator.clipboard && navigator.clipboard.write) {
-            navigator.clipboard.write(urlToCopy)
-                .then(() => {
-                    showNotification('Page URL copied to clipboard!');
-                    setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                    setTimeout(() => {
-                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                    }, 2000);
+        if (navigator.permissions && navigator.permissions.query && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.permissions.query({ name: 'clipboard-write' })
+                .then(result => {
+                    if (result.state === 'granted' || result.state === 'prompt') {
+                        navigator.clipboard.writeText(urlToCopy)
+                            .then(() => {
+                                showNotification('Page URL copied to clipboard!');
+                                setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                                setTimeout(() => {
+                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                                }, 2000);
+                            })
+                            .catch(err => {
+                                console.warn('Clipboard API failed:', err);
+                                try {
+                                    const textArea = document.createElement('textarea');
+                                    textArea.value = urlToCopy;
+                                    textArea.style.position = 'fixed';
+                                    textArea.style.opacity = '0';
+                                    document.body.appendChild(textArea);
+                                    textArea.focus();
+                                    textArea.select();
+
+                                    const success = document.execCommand('copy');
+                                    document.body.removeChild(textArea);
+                                    if (success) {
+                                        showNotification('Page URL copied to clipboard!');
+                                        setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                                        setTimeout(() => {
+                                            setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                                        }, 2000);
+                                    } else {
+                                        throw new Error('execCommand copy failed');
+                                    }
+                                } catch (fallbackErr) {
+                                    console.error('Fallback copy failed:', fallbackErr);
+                                    showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
+                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                                }
+                            });
+                    } else {
+                        console.warn('Clipboard-write permission denied');
+                        try {
+                            const textArea = document.createElement('textarea');
+                            textArea.value = urlToCopy;
+                            textArea.style.position = 'fixed';
+                            textArea.style.opacity = '0';
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+
+                            const success = document.execCommand('copy');
+                            document.body.removeChild(textArea);
+                            if (success) {
+                                showNotification('Page URL copied to clipboard!');
+                                setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                                setTimeout(() => {
+                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                                }, 2000);
+                            } else {
+                                throw new Error('execCommand copy failed');
+                            }
+                        } catch (fallbackErr) {
+                            console.error('Fallback copy failed:', fallbackErr);
+                            showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
+                            setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                        }
+                    }
                 })
                 .catch(err => {
-                    console.warn('Clipboard API failed, attempting fallback:', err);
+                    console.warn('Permission query failed:', err);
                     try {
                         const textArea = document.createElement('textarea');
                         textArea.value = urlToCopy;
