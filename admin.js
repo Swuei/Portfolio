@@ -1,11 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     console.log("Admin panel initialized successfully");
 
-    const GITHUB_REPO = 'Swuei/Portfolio';
-    const AUTH_ENDPOINT = `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/token-validation.yml/dispatches`;
-
-    const DISCORD_WEBHOOK_URL = '';
-
+    const NETLIFY_FUNCTIONS = '/.netlify/functions';
     const adminBtn = document.getElementById('adminBtn');
     const adminModal = document.getElementById('adminModal');
     const closeBtn = document.querySelector('.admin-close-btn');
@@ -15,6 +11,9 @@
     const submitEntryBtn = document.getElementById('submitEntryBtn');
     const statusNotification = document.getElementById('statusNotification');
     const logoutBtn = document.getElementById('logoutBtn');
+    const shareBtn = document.getElementById('shareBtn');
+
+    let csrfToken = generateCSRFToken();
 
     if (adminBtn && adminModal) {
         adminBtn.addEventListener('click', function (e) {
@@ -37,34 +36,42 @@
         });
     }
 
+    function generateCSRFToken() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     function checkAuthStatus() {
-        const token = localStorage.getItem('adminSecret');
-        let expiry = localStorage.getItem('tokenExpiry');
-
-        if (token && expiry) {
-            const normalized = new Date(expiry).toISOString().replace(/\.\d{3}Z$/, 'Z');
-
-            if (new Date(normalized) > new Date()) {
+        fetch(`${NETLIFY_FUNCTIONS}/check-auth`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.isAuthenticated) {
                 loginForm.style.display = 'none';
                 entryForm.style.display = 'block';
                 if (adminBtn) adminBtn.style.display = 'flex';
-                return;
+            } else {
+                loginForm.style.display = 'block';
+                entryForm.style.display = 'none';
             }
-        }
-
-        localStorage.removeItem('adminSecret');
-        localStorage.removeItem('tokenExpiry');
-        loginForm.style.display = 'block';
-        entryForm.style.display = 'none';
+        })
+        .catch(() => {
+            loginForm.style.display = 'block';
+            entryForm.style.display = 'none';
+        });
     }
-
 
     checkAuthStatus();
 
     if (loginBtn) {
         loginBtn.addEventListener('click', async () => {
-            const token = document.getElementById('githubToken').value.trim();
-            const expiryInput = document.getElementById('tokenExpiry').value.trim();
+            const token = sanitizeInput(document.getElementById('githubToken').value.trim());
+            const expiryInput = sanitizeInput(document.getElementById('tokenExpiry').value.trim());
 
             if (!token || !expiryInput) {
                 showNotification('Please enter both token and expiry', 'error');
@@ -77,64 +84,28 @@
                 return;
             }
 
-            const isoExpiry = expiryDate.toISOString().replace(/\.\d{3}Z$/, 'Z');
-
             try {
-                const dispatchRes = await fetch(AUTH_ENDPOINT, {
+                const response = await fetch(`${NETLIFY_FUNCTIONS}/auth`, {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
                     },
                     body: JSON.stringify({
-                        ref: 'main',
-                        inputs: {
-                            token,
-                            expiry: isoExpiry
-                        }
+                        token,
+                        expiry: expiryDate.toISOString()
                     })
                 });
 
-                if (dispatchRes.status !== 204) {
-                    throw new Error(`Dispatch failed: HTTP ${dispatchRes.status}`);
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Authentication failed');
                 }
 
-                showNotification('Validation in progress… please wait', 'info');
-
-                const ownerRepo = GITHUB_REPO.split('/');
-                const [owner, repo] = ownerRepo;
-                const workflowId = 'token-validation.yml';
-                let conclusion = null;
-                const start = Date.now();
-                const timeout = 60 * 1000;
-                const pollInterval = 3000;
-
-                while (Date.now() - start < timeout) {
-                    await new Promise(r => setTimeout(r, pollInterval));
-                    const runs = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowId}/runs?event=workflow_dispatch`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }).then(res => res.json());
-
-                    const latest = runs.workflow_runs && runs.workflow_runs[0];
-                    if (!latest) continue;
-                    if (['completed', 'failure', 'success'].includes(latest.status)) {
-                        conclusion = latest.conclusion;
-                        break;
-                    }
-                }
-
-                if (conclusion === 'success') {
-                    localStorage.setItem('adminSecret', token);
-                    localStorage.setItem('tokenExpiry', isoExpiry);
-                    checkAuthStatus();
-                    showNotification('✅ Access granted', 'success');
-                } else {
-                    throw new Error('Validation failed or timed out');
-                }
+                csrfToken = generateCSRFToken();
+                checkAuthStatus();
+                showNotification('✅ Access granted', 'success');
             } catch (err) {
                 console.error(err);
                 showNotification(err.message || 'Authentication failed', 'error');
@@ -142,33 +113,36 @@
         });
     }
 
-
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('adminSecret');
-            localStorage.removeItem('tokenExpiry');
-            checkAuthStatus();
-            showNotification('Successfully logged out', 'success');
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await fetch(`${NETLIFY_FUNCTIONS}/logout`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRF-Token': csrfToken
+                    }
+                });
+                csrfToken = generateCSRFToken();
+                checkAuthStatus();
+                showNotification('Successfully logged out', 'success');
+            } catch (err) {
+                showNotification('Logout failed', 'error');
+            }
         });
     }
 
     if (submitEntryBtn) {
         submitEntryBtn.addEventListener('click', async () => {
-            const token = localStorage.getItem('adminSecret');
-            if (!token) {
-                showNotification('Please log in first', 'error');
-                return;
-            }
-
             const formData = {
-                name: document.getElementById('entryName').value,
-                sketchfabLink: document.getElementById('sketchfabLink').value,
-                mediafireLink: document.getElementById('mediafireLink').value,
-                counterName: document.getElementById('counterName').value,
-                fileSize: document.getElementById('fileSize').value,
-                modelCount: document.getElementById('modelCount').value,
-                uploadDate: document.getElementById('uploadDate').value,
-                targetPage: document.getElementById('targetPage').value,
+                name: sanitizeInput(document.getElementById('entryName').value),
+                sketchfabLink: sanitizeInput(document.getElementById('sketchfabLink').value),
+                mediafireLink: sanitizeInput(document.getElementById('mediafireLink').value),
+                counterName: sanitizeInput(document.getElementById('counterName').value),
+                fileSize: sanitizeInput(document.getElementById('fileSize').value),
+                modelCount: sanitizeInput(document.getElementById('modelCount').value),
+                uploadDate: sanitizeInput(document.getElementById('uploadDate').value),
+                targetPage: sanitizeInput(document.getElementById('targetPage').value),
                 isNew: document.getElementById('isNew').checked,
                 isAnimated: document.getElementById('isAnimated').checked
             };
@@ -179,40 +153,25 @@
             }
 
             try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+                const response = await fetch(`${NETLIFY_FUNCTIONS}/submit-entry`, {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json',
-                        'X-GitHub-Api-Version': '2022-11-28'
+                        'X-CSRF-Token': csrfToken
                     },
-                    body: JSON.stringify({
-                        event_type: 'update_downloads',
-                        client_payload: formData
-                    })
+                    body: JSON.stringify(formData)
                 });
 
                 if (!response.ok) {
-                    const responseText = await response.text();
-                    let errorMessage = `HTTP ${response.status}`;
-                    try {
-                        const responseData = JSON.parse(responseText);
-                        errorMessage = responseData.message || errorMessage;
-                    } catch (e) {
-                        console.warn('Failed to parse JSON response:', responseText);
-                    }
-                    throw new Error(errorMessage);
+                    const data = await response.json();
+                    throw new Error(data.message || `HTTP ${response.status}`);
                 }
 
                 showNotification('Entry submitted for processing!', 'success');
 
-                const formElements = [
-                    'entryName', 'sketchfabLink', 'mediafireLink', 'counterName',
-                    'fileSize', 'modelCount', 'uploadDate'
-                ];
-
-                formElements.forEach(id => {
+                ['entryName', 'sketchfabLink', 'mediafireLink', 'counterName',
+                 'fileSize', 'modelCount', 'uploadDate'].forEach(id => {
                     const element = document.getElementById(id);
                     if (element) element.value = '';
                 });
@@ -220,21 +179,35 @@
                 const targetPageSelect = document.getElementById('targetPage');
                 if (targetPageSelect) targetPageSelect.selectedIndex = 0;
 
+                csrfToken = generateCSRFToken();
             } catch (error) {
                 console.error('Submission error:', error);
                 let errorMessage = error.message;
-
-                if (error instanceof SyntaxError) {
-                    errorMessage = 'Invalid server response';
-                } else if (error.message.includes('401')) {
+                if (error.message.includes('401')) {
                     errorMessage = 'Authentication failed - please log in again';
                 } else if (error.message.includes('500')) {
                     errorMessage = 'Server error - please try again later';
                 }
-
                 showNotification(`Submission failed: ${errorMessage}`, 'error');
             }
         });
+    }
+
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                showNotification('URL copied to clipboard!', 'success');
+            } catch (err) {
+                showNotification('Failed to copy URL', 'error');
+            }
+        });
+    }
+
+    function sanitizeInput(input) {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
     }
 
     function showNotification(message, type = 'info') {
@@ -242,7 +215,6 @@
         statusNotification.textContent = message;
         statusNotification.className = `status-notification ${type}`;
         statusNotification.style.display = 'block';
-
         setTimeout(() => {
             statusNotification.style.display = 'none';
         }, 5000);
