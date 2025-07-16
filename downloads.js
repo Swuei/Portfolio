@@ -30,10 +30,12 @@
     notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
     document.body.appendChild(notification);
 
-    function showNotification() {
+    function showNotification(message) {
+        notification.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
         notification.classList.add('show');
         setTimeout(() => {
             notification.classList.remove('show');
+            notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
         }, 3000);
     }
 
@@ -98,7 +100,7 @@
             return updateCounter(fileId);
         });
         await Promise.all(updatePromises);
-        updateTotalDownloads(); 
+        updateTotalDownloads();
     }
 
     function setButtonState(button, state, html = null) {
@@ -141,7 +143,7 @@
             userAgent: navigator.userAgent,
             source: 'mediafire'
         });
-        updateTotalDownloads(); 
+        updateTotalDownloads();
     }
 
     async function processDownload(event, fileId, button, downloadUrl) {
@@ -181,6 +183,78 @@
         processDownload(e, fileId, button, downloadUrl);
     }
 
+    function handleSharePageClick(e) {
+        e.preventDefault();
+        const button = e.currentTarget;
+        setButtonState(button, 'loading', '<i class="fas fa-spinner fa-spin"></i> Copying...');
+        const urlToCopy = 'https://swuei.github.io/Portfolio/downloads';
+
+        if (navigator.clipboard && navigator.clipboard.write) {
+            navigator.clipboard.write(urlToCopy)
+                .then(() => {
+                    showNotification('Page URL copied to clipboard!');
+                    setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                    setTimeout(() => {
+                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.warn('Clipboard API failed, attempting fallback:', err);
+                    try {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = urlToCopy;
+                        textArea.style.position = 'fixed';
+                        textArea.style.opacity = '0';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+
+                        const success = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        if (success) {
+                            showNotification('Page URL copied to clipboard!');
+                            setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                            setTimeout(() => {
+                                setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                            }, 2000);
+                        } else {
+                            throw new Error('execCommand copy failed');
+                        }
+                    } catch (fallbackErr) {
+                        console.error('Fallback copy failed:', fallbackErr);
+                        showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
+                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                    }
+                });
+        } else {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = urlToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                const success = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                if (success) {
+                    showNotification('Page URL copied to clipboard!');
+                    setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
+                    setTimeout(() => {
+                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+                    }, 2000);
+                } else {
+                    throw new Error('execCommand copy failed');
+                }
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr);
+                showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
+                setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
+            }
+        }
+    }
+
     function setupDownloadButtons() {
         document.querySelectorAll('.download-btn[data-download="true"]').forEach(btn => {
             btn.removeAttribute('onclick');
@@ -188,6 +262,14 @@
         });
     }
 
+    function setupShareButton() {
+        const shareButton = document.getElementById('share-page-btn');
+        if (shareButton) {
+            shareButton.addEventListener('click', handleSharePageClick);
+        }
+    }
+
     updateAllCounters();
     setupDownloadButtons();
+    setupShareButton();
 });
