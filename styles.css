@@ -1281,11 +1281,13 @@ footer {
     align-items: center;
     transition: all 0.3s ease;
     z-index: 9999;
+    opacity: 0;
 }
 
     .admin-btn:hover {
         transform: scale(1.1) rotate(90deg);
         box-shadow: 0 6px 20px rgba(0, 255, 213, 0.5);
+        opacity: 0;
     }
 
 .admin-modal {
