@@ -328,6 +328,32 @@
             shareButton.addEventListener('click', handleSharePageClick);
         }
     }
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+    });
+
+        document.onkeydown = function(event) {
+        if (event.key === 'F12' ||
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) ||
+        (event.ctrlKey && event.key === 'U') ||
+        (event.ctrlKey && event.key === 'S') ||
+        (event.ctrlKey && event.shiftKey && event.key === 'E')) {
+            event.preventDefault();
+        return false;
+        }
+    };
+
+        document.onselectstart = function(event) {
+            event.preventDefault();
+        return false;
+    };
+
+    setInterval(function () {
+        if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+            alert('Please close DevTools to continue.');
+            location.reload();
+        }
+    }, 500);
 
     updateAllCounters();
     setupDownloadButtons();
