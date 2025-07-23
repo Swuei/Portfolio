@@ -1,318 +1,296 @@
 ﻿﻿﻿
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
-<script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN9PTRHS4G"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-DN9PTRHS4G');
     </script>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Swuei | Downloads</title>
-<link href="https://i.ibb.co/MDhCjGRL/eye-block.png" rel="icon" type="image/png"/>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet"/>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
-<link href="styles.css" rel="stylesheet"/>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="downloads.js"></script>
-<script src="admin.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swuei | Downloads</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/MDhCjGRL/eye-block.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/dogica" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="downloads.js"></script>
+    <script src="admin.js"></script>
 </head>
 <body>
-<div class="top-bar">
-<nav class="top-bar-nav">
-<button class="top-bar-btn" onclick="window.location.href='index.html'">
-<i class="fas fa-user"></i>
-<span>About Me</span>
-</button>
-<button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
-<i class="fas fa-cube"></i>
-<span>Models</span>
-</button>
-<button class="top-bar-btn" onclick="window.location.href='index.html#request'">
-<i class="fas fa-paper-plane"></i>
-<span>Make a Request</span>
-</button>
-<button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
-<i class="fas fa-user-circle"></i>
-<span>Sketchfab</span>
-</button>
-<button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
-<i class="fas fa-download"></i>
-<span>Downloads</span>
-</button>
-<button class="top-bar-btn" onclick="window.location.href='#privacy'">
-<i class="fas fa-shield-alt"></i>
-<span>Privacy</span>
-</button>
-<button class="top-bar-btn" onclick="window.open('faq.html', '_blank')"><i class="fas fa-question-circle"></i> FAQ</button>
-</nav>
-</div>
-<section class="hero">
-<div class="hero-content">
-<div class="hero-text">
-<h2>Download Center</h2>
-<p>
+    <div class="top-bar">
+        <nav class="top-bar-nav">
+            <button class="top-bar-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-user"></i>
+                <span>About Me</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#portfolio'">
+                <i class="fas fa-cube"></i>
+                <span>Models</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='index.html#request'">
+                <i class="fas fa-paper-plane"></i>
+                <span>Make a Request</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('https://sketchfab.com/swuei', '_blank')">
+                <i class="fas fa-user-circle"></i>
+                <span>Sketchfab</span>
+            </button>
+            <button class="top-bar-btn downloads-btn" onclick="window.location.href='downloads.html'">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.location.href='#privacy'">
+                <i class="fas fa-shield-alt"></i>
+                <span>Privacy</span>
+            </button>
+            <button class="top-bar-btn" onclick="window.open('faq.html', '_blank')"><i class="fas fa-question-circle"></i> FAQ</button>
+        </nav>
+    </div>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Download Center</h2>
+                <p>
                     Most of my free models, all in one place — no more DM requests! This hub is regularly updated with new resources for server owners and players alike.
                 </p>
-<div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
-<p>
+                <div class="hero-disclaimer" data-aos="fade-up" data-aos-delay="300">
+                    <p>
                         This is a <strong>prototype</strong> download page. Some features might not work perfectly yet — updates are on the way. If any of the download links or download counters don't work, please message me on discord @swuei.
                     </p>
-</div>
-<div style="margin-top: 2rem;">
-<a class="btn" href="https://sketchfab.com/swuei" rel="noopener noreferrer" target="_blank">Sketchfab</a>
-<a class="btn" href="#privacy" style="background-color: #00ffd5; color: #111;">Privacy Policy</a>
-<button class="btn" id="share-page-btn"><i class="fas fa-link"></i> Share my Page</button>
-</div>
-</div>
-<img alt="Download Icon" class="hero-logo" src="https://i.ibb.co/MDhCjGRL/eye-block.png"/>
-</div>
-<div class="download-stats">
-<div class="total-downloads">
-<i class="fas fa-download"></i>
-<span id="totalDownloads">0</span> Total Downloads
+                </div>
+                <div style="margin-top: 2rem;">
+                    <a class="btn" href="https://sketchfab.com/swuei" rel="noopener noreferrer" target="_blank">Sketchfab</a>
+                    <a class="btn" href="#privacy" style="background-color: #00ffd5; color: #111;">Privacy Policy</a>
+                    <button class="btn" id="share-page-btn"><i class="fas fa-link"></i> Share my Page</button>
+                </div>
             </div>
-</div>
-</section>
-<section class="download-section" data-aos="fade-up" id="model-packs">
-<div class="download-header">
-<h3 class="download-title">Swuei's 3D Models</h3>
-</div>
-<p class="download-description">
+            <img alt="Download Icon" class="hero-logo" src="https://i.ibb.co/MDhCjGRL/eye-block.png" />
+        </div>
+        <div class="download-stats">
+            <div class="total-downloads">
+                <i class="fas fa-download"></i>
+                <span id="totalDownloads">0</span> Total Downloads
+            </div>
+        </div>
+    </section>
+
+    <section class="download-section" data-aos="fade-up" id="model-packs">
+        <div class="download-header">
+            <h3 class="download-title">Swuei's 3D Models</h3>
+        </div>
+        <p class="download-description">
             Additions coming soon!
         </p>
-<div class="pageflipper-notice">
-<i class="fas fa-bell shaking-bell"></i>
-<span>Download and view more of my models by clicking these buttons below!</span>
-<div class="animated-arrow">
-<i class="fas fa-chevron-down"></i>
-</div>
-</div>
-<div class="download-pageflipper highlighted-pagination">
-<a class="arrow-btn arrow-left" href="downloads2.html">
-<i class="fas fa-chevron-left"></i>
-</a>
-<a class="page-link" href="downloads.html">1</a>
-<span class="page-divider">|</span>
-<a class="page-link" href="downloads2.html">2</a>
-<span class="page-divider">|</span>
-<span class="page-link active">3</span>
-<button class="arrow-btn arrow-right" disabled="">
-<i class="fas fa-chevron-right"></i>
-</button>
-</div>
-<div class="download-columns">
-<div class="download-column">
-<div class="download-item">
-<div class="download-item-header">
-<h4>d</h4>
-<span class="new-slider">(NEW!)</span>
-<span class="animated-tag"><i class="fas fa-cogs"></i> Animated</span>
-<span class="download-item-count" data-counter="a">
-<i class="fas fa-download"></i> <span>0</span>
-</span>
-</div>
-<div class="download-links">
-<a class="download-btn" data-download="true" href="a" target="_blank">
-<i class="fas fa-file-archive"></i> Download ZIP
-                </a>
-<a class="download-btn" href="a" target="_blank">
-<i class="fas fa-eye"></i> Preview
-                </a>
-</div>
-<div class="download-meta">
-<span><i class="fas fa-file-archive"></i> a</span>
-<span><i class="fas fa-cube"></i> a</span>
-<span><i class="fas fa-calendar-alt"></i> a</span>
-</div>
-</div>
+        <div class="pageflipper-notice">
+            <i class="fas fa-bell shaking-bell"></i>
+            <span>Download and view more of my models by clicking these buttons below!</span>
+            <div class="animated-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        <div class="download-pageflipper highlighted-pagination">
+            <a class="arrow-btn arrow-left" href="downloads2.html">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <a class="page-link" href="downloads.html">1</a>
+            <span class="page-divider">|</span>
+            <a class="page-link" href="downloads2.html">2</a>
+            <span class="page-divider">|</span>
+            <span class="page-link active">3</span>
+            <button class="arrow-btn arrow-right" disabled>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
 
-<!-- Self Note: When adding new products start from here so that the structure stays intact -->
-<div class="download-item coming-soon">
-<div class="download-item-header">
-<h4>Coming Soon!</h4>
-<span class="download-item-count" data-counter="coming-soon-counter">
-<i class="fas fa-download"></i> <span>0</span>
-</span>
-</div>
-<div class="download-links">
-<button class="download-btn" disabled="">
-<i class="fas fa-file-archive"></i> Download ZIP
+        <div class="download-columns">
+            <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+                <div class="download-item coming-soon">
+                    <div class="download-item-header">
+                        <h4>Coming Soon!</h4>
+                        <span class="download-item-count" data-counter="coming-soon-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <button class="download-btn" disabled="">
+                            <i class="fas fa-file-archive"></i> Download ZIP
                         </button>
-<button class="download-btn" disabled="">
-<i class="fas fa-eye"></i> Preview
+                        <button class="download-btn" disabled="">
+                            <i class="fas fa-eye"></i> Preview
                         </button>
-</div>
-<div class="download-meta">
-<span><i class="fas fa-file-archive"></i> -- MB</span>
-<span><i class="fas fa-cube"></i> -- models</span>
-<span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
-</div>
-</div>
-</div>
-<!-- Self Note: This is the start of the right column -->
-<div class="download-column">
-<!-- Self Note: When adding new products start from here so that the structure stays intact -->
-<div class="download-item coming-soon">
-<div class="download-item-header">
-<h4>Coming Soon!</h4>
-<span class="download-item-count" data-counter="coming-soon-counter">
-<i class="fas fa-download"></i> <span>0</span>
-</span>
-</div>
-<div class="download-links">
-<button class="download-btn" disabled="">
-<i class="fas fa-file-archive"></i> Download ZIP
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> -- MB</span>
+                        <span><i class="fas fa-cube"></i> -- models</span>
+                        <span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Self Note: This is the start of the right column -->
+            <div class="download-column">
+                <!-- Self Note: When adding new products start from here so that the structure stays intact -->
+                <div class="download-item coming-soon">
+                    <div class="download-item-header">
+                        <h4>Coming Soon!</h4>
+                        <span class="download-item-count" data-counter="coming-soon-counter">
+                            <i class="fas fa-download"></i> <span>0</span>
+                        </span>
+                    </div>
+                    <div class="download-links">
+                        <button class="download-btn" disabled="">
+                            <i class="fas fa-file-archive"></i> Download ZIP
                         </button>
-<button class="download-btn" disabled="">
-<i class="fas fa-eye"></i> Preview
+                        <button class="download-btn" disabled="">
+                            <i class="fas fa-eye"></i> Preview
                         </button>
-</div>
-<div class="download-meta">
-<span><i class="fas fa-file-archive"></i> -- MB</span>
-<span><i class="fas fa-cube"></i> -- models</span>
-<span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<button class="admin-btn" id="adminBtn">
-<i class="fas fa-plus"></i>
-</button>
-<div class="admin-modal" id="adminModal">
-<div class="admin-modal-content">
-<span class="admin-close-btn">×</span>
-<h3>Admin Panel</h3>
-<div id="loginForm">
-<div class="admin-form-group">
-<label for="githubToken">Username:</label>
-<input id="githubToken" placeholder="Enter your Username" type="password"/>
-</div>
-<div class="admin-form-group">
-<label for="tokenExpiry">Username Expiry:</label>
-<input id="tokenExpiry" placeholder="Expiry" type="text"/>
-</div>
-<button class="admin-submit-btn" id="loginBtn">Login</button>
-</div>
-<div id="entryForm" style="display: none;">
-<div class="admin-form-group">
-<label for="isNew">Mark as New:</label>
-<input checked="" id="isNew" type="checkbox"/>
-</div>
-<div class="admin-form-group">
-<label for="isAnimated">Mark as Animated:</label>
-<input id="isAnimated" type="checkbox"/>
-</div>
-<div class="admin-form-group">
-<label for="entryName">Model Name:</label>
-<input id="entryName" placeholder="Fish Tank [1] (16x) | Animated" type="text">
-</input></div>
-<div class="admin-form-group">
-<label for="sketchfabLink">Sketchfab Link:</label>
-<input id="sketchfabLink" placeholder="https://sketchfab.com/3d-models/..." type="url">
-</input></div>
-<div class="admin-form-group">
-<label for="mediafireLink">Mediafire Link:</label>
-<input id="mediafireLink" placeholder="https://www.mediafire.com/file/..." type="url"/>
-</div>
-<div class="admin-form-group">
-<label for="counterName">Counter Name:</label>
-<input id="counterName" placeholder="fish-tank-counter" type="text"/>
-</div>
-<div class="admin-form-group">
-<label for="fileSize">File Size:</label>
-<input id="fileSize" placeholder="376.31KB" type="text"/>
-</div>
-<div class="admin-form-group">
-<label for="modelCount">Model Count:</label>
-<input id="modelCount" placeholder="1 Model &amp; 1 Texture" type="text"/>
-</div>
-<div class="admin-form-group">
-<label for="uploadDate">Upload Date:</label>
-<input id="uploadDate" placeholder="06/01/2025" type="text"/>
-</div>
-<div class="admin-form-group">
-<label for="targetPage">Target Page:</label>
-<select id="targetPage">
-<option value="downloads.html">Page 1</option>
-<option value="downloads2.html">Page 2</option>
-<option value="downloads3.html">Page 3</option>
-</select>
-</div>
-<button class="admin-submit-btn" id="submitEntryBtn">Add Entry</button>
-</div>
-</div>
-</div>
-<div class="status-notification" id="statusNotification"></div>
-<section class="privacy-section" id="privacy">
-<div class="privacy-container">
-<h2>Privacy Policy</h2>
-<div class="privacy-content">
-<div class="privacy-column">
-<h3>Data Collection</h3>
-<p>I use Google Analytics to collect anonymous usage data to improve my website. This includes:</p>
-<ul>
-<li>Pages visited</li>
-<li>Time spent on site</li>
-<li>Download interactions</li>
-<li>Device and browser information</li>
-</ul>
-</div>
-<div class="privacy-column">
-<h3>Download Tracking</h3>
-<p>When you download files, we track:</p>
-<ul>
-<li>Which files are downloaded</li>
-<li>Timestamp of download</li>
-<li>Basic user agent information</li>
-</ul>
-<p>This helps me understand which resources are most valuable to my users.</p>
-</div>
-<div class="privacy-column">
-<h3>Your Choices</h3>
-<p>You can control what data is collected:</p>
-<ul>
-<li>Use browser settings to block cookies</li>
-<li>Opt-out of Google Analytics tracking</li>
-<li>Disable JavaScript to prevent tracking</li>
-</ul>
-<p>I don't collect personally identifiable information without your consent.</p>
-</div>
-<div class="privacy-column" style="grid-column: 2 / span 4; text-align: center; margin: 0 auto;">
-<h3>Form Data Collection</h3>
-<p>When you submit a model request form, I collect:</p>
-<ul style="display: inline-block; text-align: left;">
-<li>Your Discord username</li>
-<li>Model request details</li>
-<li>Reference image URL (hosted on ImgBB)</li>
-<li>Texture size preference</li>
-<li>Intended use of the model</li>
-</ul>
-</div>
-</div>
-<div class="privacy-update">
-<p><strong>Last Updated:</strong> May 20, 2025</p>
-<p>This policy may be updated periodically. Please check back for changes.</p>
-</div>
-</div>
-</section>
-<footer>
-<div class="social-links">
-<a aria-label="Discord" href="https://discord.com/users/817968354979610624" target="_blank"><i class="fab fa-discord"></i></a>
-<a aria-label="Sketchfab" href="https://sketchfab.com/Swuei" target="_blank"><i class="fas fa-cube"></i></a>
-<a aria-label="GitHub" href="https://github.com/Swuei" target="_blank"><i class="fab fa-github"></i></a>
-</div>
-<p>© 2025 Swuei. All rights reserved. | <a href="downloads.html#privacy">Privacy Policy</a> | <a href="faq.html" target="_blank">FAQ</a></p>
-</footer>
+                    </div>
+                    <div class="download-meta">
+                        <span><i class="fas fa-file-archive"></i> -- MB</span>
+                        <span><i class="fas fa-cube"></i> -- models</span>
+                        <span><i class="fas fa-calendar-alt"></i> Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <button class="admin-btn" id="adminBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <span class="admin-close-btn">×</span>
+            <h3>Admin Panel</h3>
+            <div id="loginForm">
+                <div class="admin-form-group">
+                    <label for="githubToken">Username:</label>
+                    <input id="githubToken" placeholder="Enter your Username" type="password" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="tokenExpiry">Username Expiry:</label>
+                    <input id="tokenExpiry" placeholder="Expiry" type="text" />
+                </div>
+                <button class="admin-submit-btn" id="loginBtn">Login</button>
+            </div>
+            <div id="entryForm" style="display: none;">
+                <div class="admin-form-group">
+                    <label for="isNew">Mark as New:</label>
+                    <input type="checkbox" id="isNew" checked>
+                </div>
+                <div class="admin-form-group">
+                    <label for="isAnimated">Mark as Animated:</label>
+                    <input type="checkbox" id="isAnimated">
+                </div>
+                <div class="admin-form-group">
+                    <label for="entryName">Model Name:</label>
+                    <input id="entryName" placeholder="Fish Tank [1] (16x) | Animated" type="text" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="sketchfabLink">Sketchfab Link:</label>
+                    <input id="sketchfabLink" placeholder="https://sketchfab.com/3d-models/..." type="url" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="mediafireLink">Mediafire Link:</label>
+                    <input id="mediafireLink" placeholder="https://www.mediafire.com/file/..." type="url" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="counterName">Counter Name:</label>
+                    <input id="counterName" placeholder="fish-tank-counter" type="text" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="fileSize">File Size:</label>
+                    <input id="fileSize" placeholder="376.31KB" type="text" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="modelCount">Model Count:</label>
+                    <input id="modelCount" placeholder="1 Model &amp; 1 Texture" type="text" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="uploadDate">Upload Date:</label>
+                    <input id="uploadDate" placeholder="06/01/2025" type="text" />
+                </div>
+                <div class="admin-form-group">
+                    <label for="targetPage">Target Page:</label>
+                    <select id="targetPage">
+                        <option value="downloads.html">Page 1</option>
+                        <option value="downloads2.html">Page 2</option>
+                        <option value="downloads3.html">Page 3</option>
+                    </select>
+                </div>
+                <button class="admin-submit-btn" id="submitEntryBtn">Add Entry</button>
+            </div>
+        </div>
+    </div>
+    <div class="status-notification" id="statusNotification"></div>
+    <section class="privacy-section" id="privacy">
+        <div class="privacy-container">
+            <h2>Privacy Policy</h2>
+            <div class="privacy-content">
+                <div class="privacy-column">
+                    <h3>Data Collection</h3>
+                    <p>I use Google Analytics to collect anonymous usage data to improve my website. This includes:</p>
+                    <ul>
+                        <li>Pages visited</li>
+                        <li>Time spent on site</li>
+                        <li>Download interactions</li>
+                        <li>Device and browser information</li>
+                    </ul>
+                </div>
+                <div class="privacy-column">
+                    <h3>Download Tracking</h3>
+                    <p>When you download files, we track:</p>
+                    <ul>
+                        <li>Which files are downloaded</li>
+                        <li>Timestamp of download</li>
+                        <li>Basic user agent information</li>
+                    </ul>
+                    <p>This helps me understand which resources are most valuable to my users.</p>
+                </div>
+                <div class="privacy-column">
+                    <h3>Your Choices</h3>
+                    <p>You can control what data is collected:</p>
+                    <ul>
+                        <li>Use browser settings to block cookies</li>
+                        <li>Opt-out of Google Analytics tracking</li>
+                        <li>Disable JavaScript to prevent tracking</li>
+                    </ul>
+                    <p>I don't collect personally identifiable information without your consent.</p>
+                </div>
+                <div class="privacy-column" style="grid-column: 2 / span 4; text-align: center; margin: 0 auto;">
+                    <h3>Form Data Collection</h3>
+                    <p>When you submit a model request form, I collect:</p>
+                    <ul style="display: inline-block; text-align: left;">
+                        <li>Your Discord username</li>
+                        <li>Model request details</li>
+                        <li>Reference image URL (hosted on ImgBB)</li>
+                        <li>Texture size preference</li>
+                        <li>Intended use of the model</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="privacy-update">
+                <p><strong>Last Updated:</strong> May 20, 2025</p>
+                <p>This policy may be updated periodically. Please check back for changes.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://discord.com/users/817968354979610624" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://sketchfab.com/Swuei" target="_blank" aria-label="Sketchfab"><i class="fas fa-cube"></i></a>
+            <a href="https://github.com/Swuei" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2025 Swuei. All rights reserved. | <a href="downloads.html#privacy">Privacy Policy</a> | <a href="faq.html" target="_blank">FAQ</a></p>
+    </footer>
 </body>
 </html>
