@@ -916,8 +916,8 @@ footer {
     }
 
     .faq-item.active .answer {
-        max-height: 200px;
-        padding: 1rem;
+        max-height: 400px; 
+        padding: 1.5rem 1rem; 
     }
 
 @media (max-width: 768px) {
@@ -938,7 +938,7 @@ footer {
         }
 
         .faq-item.active .answer {
-            max-height: 300px;
+            max-height: 600px;
         }
 }
 
