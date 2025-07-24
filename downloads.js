@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 800,
@@ -328,34 +328,28 @@ document.addEventListener('DOMContentLoaded', function () {
             shareButton.addEventListener('click', handleSharePageClick);
         }
     }
-
-    document.addEventListener('contextmenu', function (event) {
-        event.preventDefault();
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
     });
 
-    document.onkeydown = function (event) {
-        if (
-            event.key === 'F12' ||
-            (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) ||
-            (event.ctrlKey && event.key === 'U') ||
-            (event.ctrlKey && event.key === 'S') ||
-            (event.ctrlKey && event.shiftKey && event.key === 'E')
-        ) {
+        document.onkeydown = function(event) {
+        if (event.key === 'F12' ||
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) ||
+        (event.ctrlKey && event.key === 'U') ||
+        (event.ctrlKey && event.key === 'S') ||
+        (event.ctrlKey && event.shiftKey && event.key === 'E')) {
             event.preventDefault();
-            return false;
+        return false;
         }
     };
 
-    document.onselectstart = function (event) {
-        event.preventDefault();
+        document.onselectstart = function(event) {
+            event.preventDefault();
         return false;
     };
 
     setInterval(function () {
-        const start = performance.now();
-        debugger;
-        const timeTaken = performance.now() - start;
-        if (timeTaken > 100) {
+        if (window.outerWidth - window.innerWidth > 200 || window.outerHeight - window.innerHeight > 200) {
             alert('Please close DevTools to continue.');
             location.reload();
         }

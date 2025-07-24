@@ -916,8 +916,8 @@ footer {
     }
 
     .faq-item.active .answer {
-        max-height: 400px; 
-        padding: 1.5rem 1rem; 
+        max-height: 400px;
+        padding: 1.5rem 1rem;
     }
 
 @media (max-width: 768px) {
@@ -1141,7 +1141,7 @@ footer {
 .admin-btn {
     position: fixed;
     bottom: 25px;
-    right: 25px;
+    left: 25px;
     background: linear-gradient(135deg, #00ffd5, #4d79ff);
     color: #111;
     border: none;
