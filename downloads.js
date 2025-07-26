@@ -350,7 +350,7 @@
 
     setInterval(function () {
         if (window.outerWidth - window.innerWidth > 200 || window.outerHeight - window.innerHeight > 200) {
-            alert('Please close DevTools to continue.');
+            alert('Please close DevTools to continue. (If you are seeing this and you dont have DevTools open, please disable any extensions/toolbars that may interfere with the screen, use your main monitor, If you are on mobile, flip your screen to portrait mode, and use the default resolution for your monitor)');
             location.reload();
         }
     }, 500);
