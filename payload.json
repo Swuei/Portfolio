@@ -1,12 +1,12 @@
 {
-  "name": "a",
-  "sketchfabLink": "a",
-  "mediafireLink": "a",
-  "counterName": "a",
-  "fileSize": "a",
-  "modelCount": "a",
-  "uploadDate": "a",
-  "targetPage": "downloads3.html",
+  "name": "Shubbery Pack [14] (16x)",
+  "sketchfabLink": "https://sketchfab.com/3d-models/free-shrubbery-16x-7c9d2a69e06546e196b8492b5ae9ee6d",
+  "mediafireLink": "https://www.mediafire.com/file/0e7sref0zna3r66/Shrubbery.zip/file",
+  "counterName": "shrub-counter",
+  "fileSize": "492.37",
+  "modelCount": "14 models (in .bbmodel format)",
+  "uploadDate": "09/06/2025",
+  "targetPage": "downloads2.html",
   "isNew": true,
-  "isAnimated": true
+  "isAnimated": false
 }
