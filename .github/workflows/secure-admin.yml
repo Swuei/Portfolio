@@ -38,13 +38,12 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .github/expiry.enc
-          git commit -m "Update encrypted expiry" || echo "No changes to commit"
+          git commit -m "Update encrypted expiry"
           git push
 
-      - name: Send to Discord via curl
-        run: |
-          PAYLOAD=$(jq -n --arg msg "${{ steps.generate.outputs.message }}" '{content: $msg}')
-          curl -s -H "Content-Type: application/json" \
-               -X POST \
-               -d "$PAYLOAD" \
-               "${{ secrets.DISCORD_WEBHOOK_URL }}"
+      - name: Send to Discord
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ${{ steps.generate.outputs.message }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
