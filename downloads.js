@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 800,
@@ -27,7 +27,6 @@
 
     const notification = document.createElement('div');
     notification.className = 'download-notification';
-    notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
     document.body.appendChild(notification);
 
     function showNotification(message) {
@@ -35,7 +34,6 @@
         notification.classList.add('show');
         setTimeout(() => {
             notification.classList.remove('show');
-            notification.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>You can only download this resource once to prevent inaccurate count</span>';
         }, 3000);
     }
 
@@ -46,7 +44,6 @@
             const totalElement = document.getElementById('totalDownloads');
             if (totalElement) {
                 const newCount = snapshot.size.toLocaleString();
-
                 if (totalElement.textContent !== newCount) {
                     for (let i = 0; i < 8; i++) {
                         const spark = document.createElement('div');
@@ -58,18 +55,12 @@
                         spark.style.left = `${50 + Math.cos(angle) * 10}%`;
                         spark.style.top = `${50 + Math.sin(angle) * 10}%`;
                         totalElement.parentElement.appendChild(spark);
-
-                        setTimeout(() => {
-                            spark.remove();
-                        }, 800);
+                        setTimeout(() => spark.remove(), 800);
                     }
-
                     totalElement.classList.add('total-downloads-bounce');
-
                     setTimeout(() => {
                         totalElement.textContent = newCount;
                     }, 200);
-
                     setTimeout(() => {
                         totalElement.classList.remove('total-downloads-bounce');
                     }, 400);
@@ -114,7 +105,6 @@
             case 'success':
                 button.innerHTML = html || originalHtml;
                 button.classList.remove('loading');
-                button.classList.add('disabled');
                 button.disabled = false;
                 break;
             default:
@@ -123,16 +113,6 @@
                 button.disabled = false;
                 break;
         }
-    }
-
-    function isAlreadyDownloaded(fileId) {
-        const downloadKey = `downloaded_${fileId}`;
-        return localStorage.getItem(downloadKey) !== null;
-    }
-
-    function markAsDownloaded(fileId) {
-        const downloadKey = `downloaded_${fileId}`;
-        localStorage.setItem(downloadKey, 'true');
     }
 
     async function trackDownloadInFirebase(fileId) {
@@ -149,16 +129,17 @@
     async function processDownload(event, fileId, button, downloadUrl) {
         try {
             setButtonState(button, 'loading', '<i class="fas fa-spinner fa-spin"></i> Processing...');
-            if (isAlreadyDownloaded(fileId)) {
-                showNotification('You can only download this resource once to prevent inaccurate count');
-                setButtonState(button, 'default');
-                return;
-            }
+
             await trackDownloadInFirebase(fileId);
-            markAsDownloaded(fileId);
             await updateCounter(fileId);
+
             setTimeout(() => window.open(downloadUrl, '_blank'), 300);
             setButtonState(button, 'success', '<i class="fas fa-check"></i> Downloaded');
+
+            setTimeout(() => {
+                setButtonState(button, 'default', '<i class="fas fa-download"></i> Download');
+            }, 2000);
+
         } catch (error) {
             console.error("Download processing failed:", error);
             window.open(downloadUrl, '_blank');
@@ -171,15 +152,15 @@
         const button = e.currentTarget;
         const downloadItem = button.closest('.download-item');
         if (!downloadItem) return;
+
         const counterElement = downloadItem.querySelector('[data-counter]');
         if (!counterElement) return;
+
         const fileId = counterElement.getAttribute('data-counter');
         const downloadUrl = button.getAttribute('href');
+
         if (!fileId || !downloadUrl) return;
-        if (button.classList.contains('disabled')) {
-            showNotification('You can only download this resource once to prevent inaccurate count');
-            return;
-        }
+
         processDownload(e, fileId, button, downloadUrl);
     }
 
@@ -197,96 +178,19 @@
                             .then(() => {
                                 showNotification('Page URL copied to clipboard!');
                                 setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                                setTimeout(() => {
-                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                                }, 2000);
+                                setTimeout(() => setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page'), 2000);
                             })
-                            .catch(err => {
-                                console.warn('Clipboard API failed:', err);
-                                try {
-                                    const textArea = document.createElement('textarea');
-                                    textArea.value = urlToCopy;
-                                    textArea.style.position = 'fixed';
-                                    textArea.style.opacity = '0';
-                                    document.body.appendChild(textArea);
-                                    textArea.focus();
-                                    textArea.select();
-
-                                    const success = document.execCommand('copy');
-                                    document.body.removeChild(textArea);
-                                    if (success) {
-                                        showNotification('Page URL copied to clipboard!');
-                                        setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                                        setTimeout(() => {
-                                            setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                                        }, 2000);
-                                    } else {
-                                        throw new Error('execCommand copy failed');
-                                    }
-                                } catch (fallbackErr) {
-                                    console.error('Fallback copy failed:', fallbackErr);
-                                    showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
-                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                                }
-                            });
+                            .catch(() => fallbackCopy());
                     } else {
-                        console.warn('Clipboard-write permission denied');
-                        try {
-                            const textArea = document.createElement('textarea');
-                            textArea.value = urlToCopy;
-                            textArea.style.position = 'fixed';
-                            textArea.style.opacity = '0';
-                            document.body.appendChild(textArea);
-                            textArea.focus();
-                            textArea.select();
-
-                            const success = document.execCommand('copy');
-                            document.body.removeChild(textArea);
-                            if (success) {
-                                showNotification('Page URL copied to clipboard!');
-                                setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                                setTimeout(() => {
-                                    setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                                }, 2000);
-                            } else {
-                                throw new Error('execCommand copy failed');
-                            }
-                        } catch (fallbackErr) {
-                            console.error('Fallback copy failed:', fallbackErr);
-                            showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
-                            setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                        }
+                        fallbackCopy();
                     }
                 })
-                .catch(err => {
-                    console.warn('Permission query failed:', err);
-                    try {
-                        const textArea = document.createElement('textarea');
-                        textArea.value = urlToCopy;
-                        textArea.style.position = 'fixed';
-                        textArea.style.opacity = '0';
-                        document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
-
-                        const success = document.execCommand('copy');
-                        document.body.removeChild(textArea);
-                        if (success) {
-                            showNotification('Page URL copied to clipboard!');
-                            setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                            setTimeout(() => {
-                                setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                            }, 2000);
-                        } else {
-                            throw new Error('execCommand copy failed');
-                        }
-                    } catch (fallbackErr) {
-                        console.error('Fallback copy failed:', fallbackErr);
-                        showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
-                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                    }
-                });
+                .catch(() => fallbackCopy());
         } else {
+            fallbackCopy();
+        }
+
+        function fallbackCopy() {
             try {
                 const textArea = document.createElement('textarea');
                 textArea.value = urlToCopy;
@@ -295,20 +199,14 @@
                 document.body.appendChild(textArea);
                 textArea.focus();
                 textArea.select();
-
                 const success = document.execCommand('copy');
                 document.body.removeChild(textArea);
                 if (success) {
                     showNotification('Page URL copied to clipboard!');
                     setButtonState(button, 'success', '<i class="fas fa-check"></i> Copied');
-                    setTimeout(() => {
-                        setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
-                    }, 2000);
-                } else {
-                    throw new Error('execCommand copy failed');
+                    setTimeout(() => setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page'), 2000);
                 }
-            } catch (fallbackErr) {
-                console.error('Fallback copy failed:', fallbackErr);
+            } catch (err) {
                 showNotification('Failed to copy URL. Please copy it manually: ' + urlToCopy);
                 setButtonState(button, 'default', '<i class="fas fa-link"></i> Share my Page');
             }
@@ -328,29 +226,23 @@
             shareButton.addEventListener('click', handleSharePageClick);
         }
     }
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-    });
 
-        document.onkeydown = function(event) {
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(event) {
         if (event.key === 'F12' ||
-        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) ||
-        (event.ctrlKey && event.key === 'U') ||
-        (event.ctrlKey && event.key === 'S') ||
-        (event.ctrlKey && event.shiftKey && event.key === 'E')) {
+            (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J')) ||
+            (event.ctrlKey && event.key === 'U') ||
+            (event.ctrlKey && event.key === 'S') ||
+            (event.ctrlKey && event.shiftKey && event.key === 'E')) {
             event.preventDefault();
-        return false;
+            return false;
         }
     };
+    document.onselectstart = () => false;
 
-        document.onselectstart = function(event) {
-            event.preventDefault();
-        return false;
-    };
-
-    setInterval(function () {
+    setInterval(() => {
         if (window.outerWidth - window.innerWidth > 200 || window.outerHeight - window.innerHeight > 200) {
-            alert('Please close DevTools to continue. (If you are seeing this and you dont have DevTools open, please disable any extensions/toolbars that may interfere with the screen, use your main monitor, If you are on mobile, flip your screen to portrait mode, and use the default resolution for your monitor)');
+            alert('Please close DevTools to continue...');
             location.reload();
         }
     }, 500);
