@@ -639,8 +639,66 @@
             }
         }
 
-        .hero-visual.paused .cube-scene, .hero-visual.paused .cube-cluster, .hero-visual.paused .floaters .voxel {
+        .hero-visual.paused .cube-scene, .hero-visual.paused .cube-cluster, .hero-visual.paused .floaters .voxel, .hero-visual.paused .hero-model {
             animation-play-state: paused
+        }
+
+        .hero-models {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .hero-model-glow {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(155,127,212,.30), transparent 68%);
+            filter: blur(6px);
+            z-index: 0
+        }
+
+        .hero-model {
+            position: absolute;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,.55));
+        }
+
+        .hero-model--main {
+            width: min(300px, 58vw);
+            animation: float 4.5s ease-in-out infinite;
+            z-index: 3
+        }
+
+        .hero-model--back {
+            width: 150px;
+            opacity: .55;
+            left: 2%;
+            top: 6%;
+            animation: float-alt 5.5s ease-in-out infinite;
+            animation-delay: .3s;
+            z-index: 1
+        }
+
+        .hero-model--front {
+            width: 120px;
+            right: 2%;
+            bottom: 4%;
+            animation: float-soft 5s ease-in-out infinite;
+            animation-delay: .8s;
+            z-index: 2
+        }
+
+        .hero-model--extra {
+            width: 92px;
+            right: 6%;
+            top: 2%;
+            animation: float-alt 6s ease-in-out infinite;
+            animation-delay: 1.3s;
+            z-index: 1
         }
 
         .voxel {
@@ -735,11 +793,31 @@
 
         @keyframes float {
             0%,100% {
-                transform: translate(0,0)
+                transform: translate(0,0) rotate(0deg)
             }
 
             50% {
-                transform: translate(6px,-14px)
+                transform: translate(6px,-14px) rotate(-2deg)
+            }
+        }
+
+        @keyframes float-alt {
+            0%,100% {
+                transform: translate(0,0) rotate(0deg)
+            }
+
+            50% {
+                transform: translate(-5px,-12px) rotate(2.5deg)
+            }
+        }
+
+        @keyframes float-soft {
+            0%,100% {
+                transform: translate(0,0) rotate(0deg)
+            }
+
+            50% {
+                transform: translate(4px,-10px) rotate(-1.4deg)
             }
         }
 
@@ -1940,34 +2018,12 @@
             </div>
             <div class="hero-visual">
                 <div class="cube-scene" id="cubeScene">
-                    <div class="cube-cluster">
-                        <div class="gizmo">
-                            <div class="gizmo-ring gz-x"></div>
-                            <div class="gizmo-ring gz-y"></div>
-                            <div class="gizmo-ring gz-z"></div>
-                            <div class="gizmo-axis gz-ax-x"></div>
-                            <div class="gizmo-axis gz-ax-y"></div>
-                            <div class="gizmo-axis gz-ax-z"></div>
-                            <div class="gizmo-node gz-nx"></div>
-                            <div class="gizmo-node gz-ny"></div>
-                            <div class="gizmo-node gz-nz"></div>
-                            <div class="gizmo-node gz-nx2"></div>
-                            <div class="gizmo-node gz-ny2"></div>
-                            <div class="gizmo-node gz-nz2"></div>
-                        </div>
-                        <div class="viewcube">
-                            <div class="vc-face vc-top">TOP</div>
-                            <div class="vc-face vc-bottom">BOTTOM</div>
-                            <div class="vc-face vc-front">FRONT</div>
-                            <div class="vc-face vc-back">BACK</div>
-                            <div class="vc-face vc-left">LEFT</div>
-                            <div class="vc-face vc-right">RIGHT</div>
-                        </div>
-                    </div>
-                    <div class="floaters">
-                        <div class="voxel" style="--vc:#c98a5e; top:14%; left:8%; animation-delay:.3s"><div class="f f-front"></div><div class="f f-back"></div><div class="f f-left"></div><div class="f f-right"></div><div class="f f-top"></div><div class="f f-bottom"></div></div>
-                        <div class="voxel" style="--vc:#9b7fd4; top:70%; left:82%; animation-delay:1.1s"><div class="f f-front"></div><div class="f f-back"></div><div class="f f-left"></div><div class="f f-right"></div><div class="f f-top"></div><div class="f f-bottom"></div></div>
-                        <div class="voxel" style="--vc:#c7f24c; top:82%; left:20%; animation-delay:1.8s"><div class="f f-front"></div><div class="f f-back"></div><div class="f f-left"></div><div class="f f-right"></div><div class="f f-top"></div><div class="f f-bottom"></div></div>
+                    <div class="hero-models">
+                        <div class="hero-model-glow" aria-hidden="true"></div>
+                        <img class="hero-model hero-model--back" src="pictures/fallen_log.png" alt="" aria-hidden="true">
+                        <img class="hero-model hero-model--main" src="pictures/quest_board_sr.png" alt="A wooden quest board model hung with paper notices, beside a matching signpost">
+                        <img class="hero-model hero-model--front" src="pictures/grave.png" alt="" aria-hidden="true">
+                        <img class="hero-model hero-model--extra" src="pictures/pumpkin_mask.png" alt="" aria-hidden="true">
                     </div>
                 </div>
             </div>
